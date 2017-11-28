@@ -1,0 +1,58 @@
+
+
+<mat-card class="form">
+  <h1 class="">Hello {{ userDto.gender | genderToSalution }} {{ !userDto.username ? 'new user' : userDto.username }}!</h1>
+  <mat-form-field class="full-width">
+    <input matInput placeholder="username" [(ngModel)]="userDto.username" required>
+  </mat-form-field>
+
+  <br>
+
+  <mat-form-field class="full-width">
+    <input matInput placeholder="password" [type]="hidden ? 'password' : 'text'" [(ngModel)]="userDto.password" required>
+    <mat-icon matSuffix (click)="hidden = !hidden">{{ hidden ? 'visibility_off' : 'visibility' }}</mat-icon>
+  </mat-form-field>
+
+  <br>
+
+  <mat-form-field class="full-width">
+    <input matInput placeholder="email" [(ngModel)]="userDto.email" required>
+  </mat-form-field>
+
+  <br>
+
+  <mat-form-field class="full-width">
+    <input matInput placeholder="first name" [(ngModel)]="userDto.firstname">
+  </mat-form-field>
+
+  <br>
+
+  <mat-form-field class="full-width">
+    <input matInput placeholder="last name" [(ngModel)]="userDto.lastname">
+  </mat-form-field>
+
+  <br>
+
+  <mat-form-field class="full-width">
+    <mat-select placeholder="Gender" [(ngModel)]="userDto.gender">
+      <mat-option *ngFor="let gender of genders()" [value]="gender">
+      {{ gender | lowercase }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <br>
+
+  <mat-form-field class="full-width">
+    <input matInput [matDatepicker]="picker" placeholder="birthday" [(ngModel)]="userDto.birthdate" [max]="today">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker touchUi="true" #picker></mat-datepicker>
+  </mat-form-field>
+
+
+  <br>
+
+  <button mat-raised-button (click)="register()" color="accent" class="action">Register</button>
+  <button mat-button (click)="cancel()" class="action">Cancel</button>
+</mat-card>
+
