@@ -35,6 +35,16 @@ public class UserService implements IUserService, UserDetailsService {
     }
 
     @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public User getUserByUsernameOrEmail(String usernameOrEmail) {
+        return userRepository.findByUsernameOrEmail(usernameOrEmail);
+    }
+
+    @Override
     public User registerNewUserAccount(UserDto userDto) {
 
         if (userRepository.existsWithEmail(userDto.getEmail())) {
@@ -60,6 +70,6 @@ public class UserService implements IUserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return getUserByUsername(username);
+        return getUserByUsernameOrEmail(username);
     }
 }

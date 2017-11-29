@@ -1,11 +1,9 @@
 package com.github.tobiasmiosczka.discordstats.web.controller;
 
+import com.github.tobiasmiosczka.discordstats.model.platform.User;
 import com.github.tobiasmiosczka.discordstats.services.implemented.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -30,14 +28,15 @@ public class TestController {
         return "private";
     }
 
-    @RequestMapping(value = "/username", method = RequestMethod.GET)
+    @RequestMapping(value = "/username/{usernameOrEmail}", method = RequestMethod.GET)
     @ResponseBody
-    public Principal currentUserName(Principal principal) {
-        return principal;
+    public User currentUserName(@PathVariable String usernameOrEmail) {
+        return userService.getUserByUsernameOrEmail(usernameOrEmail);
     }
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public String test() {
         return "Test";
     }
+
 }
