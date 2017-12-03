@@ -1,5 +1,3 @@
-
-
 <mat-card class="form">
   <h1 class="">Hello {{ userDto.gender | genderToSalution }} {{ !userDto.username ? 'new user' : userDto.username }}!</h1>
   <mat-form-field class="full-width">
@@ -55,4 +53,3 @@
   <button mat-raised-button (click)="register()" color="accent" class="action">Register</button>
   <button mat-button (click)="cancel()" class="action">Cancel</button>
 </mat-card>
-

@@ -18,6 +18,7 @@ import { GenderPipe } from './pipes/gender.pipe';
 import { GenderToSalutionPipe } from './pipes/gender-to-salution.pipe';
 import {MAT_DATE_LOCALE} from '@angular/material';
 import {HttpClientModule} from '@angular/common/http';
+import {Oauth2Service} from './oauth2/oauth2.service';
 
 @NgModule({
   declarations: [
@@ -38,8 +39,11 @@ import {HttpClientModule} from '@angular/common/http';
     BrowserAnimationsModule,
     HttpClientModule
   ],
-  providers: [RegisterService,
-              {provide: MAT_DATE_LOCALE, useValue: 'de-DE'}],
+  providers: [
+    RegisterService,
+    Oauth2Service,
+    {provide: MAT_DATE_LOCALE, useValue: 'de-DE'}
+    ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
