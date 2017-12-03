@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {Oauth2Service} from '../oauth2/oauth2.service';
 
 @Component({
   selector: 'app-login',
@@ -7,9 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
 
-  constructor() { }
+  private username = '';
+  private password = '';
+
+  constructor(private oauth2Service: Oauth2Service) { }
 
   ngOnInit() {
+  }
+
+  login(): void {
+    this.oauth2Service.login(this.username, this.password);
   }
 
 }
