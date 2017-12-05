@@ -41,6 +41,8 @@ public class User extends BaseEntity implements UserDetails {
     @Column(length = 128)
     private String lastname;
 
+    private boolean enabled;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role"}))
     @Enumerated(EnumType.STRING)
@@ -50,14 +52,6 @@ public class User extends BaseEntity implements UserDetails {
 
     public User() {
         super();
-    }
-
-    public User(String username, String password, String email, Set<Role> role) {
-        super();
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.role = role;
     }
 
     public void setUsername(String username) {
@@ -124,11 +118,17 @@ public class User extends BaseEntity implements UserDetails {
         this.birthdate = birthdate;
     }
 
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     /**Implementation of UserDetails*/
+
+
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
     @Override

@@ -1,4 +1,6 @@
-package com.github.tobiasmiosczka.discordstats.dto.validation;
+package com.github.tobiasmiosczka.discordstats.web.dto.validation;
+
+import com.github.tobiasmiosczka.discordstats.web.dto.validation.validators.NameValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -13,10 +15,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({TYPE, FIELD, ANNOTATION_TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = UsernameValidator.class)
+@Constraint(validatedBy = NameValidator.class)
 @Documented
-public @interface ValidUsername {
-    String message() default "Invalid username";
+public @interface ValidName {
+    String message() default "Invalid Name";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

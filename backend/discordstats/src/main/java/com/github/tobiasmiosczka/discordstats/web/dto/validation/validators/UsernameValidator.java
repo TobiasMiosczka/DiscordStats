@@ -1,4 +1,6 @@
-package com.github.tobiasmiosczka.discordstats.dto.validation;
+package com.github.tobiasmiosczka.discordstats.web.dto.validation.validators;
+
+import com.github.tobiasmiosczka.discordstats.web.dto.validation.ValidUsername;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -10,18 +12,20 @@ public class UsernameValidator implements ConstraintValidator<ValidUsername, Str
     private static final String USERNAME_PATTERN = "^[a-zA-Z0-9]*$";
     private static final Pattern pattern = Pattern.compile(USERNAME_PATTERN);
 
-
     @Override
     public void initialize(ValidUsername constraintAnnotation) {
     }
 
     @Override
-    public boolean isValid(String email, ConstraintValidatorContext context){
-        return (validateEmail(email));
+    public boolean isValid(String username, ConstraintValidatorContext context){
+        return (validateUsername(username));
     }
 
-    private boolean validateEmail(String email) {
-        Matcher matcher = pattern.matcher(email);
+    private boolean validateUsername(String username) {
+        if (username == null ||username.isEmpty())
+            return false;
+
+        Matcher matcher = pattern.matcher(username);
         return matcher.matches();
     }
 }

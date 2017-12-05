@@ -1,17 +1,19 @@
-package com.github.tobiasmiosczka.discordstats.dto;
+package com.github.tobiasmiosczka.discordstats.web.dto;
 
-import com.github.tobiasmiosczka.discordstats.dto.validation.ValidEmail;
-import com.github.tobiasmiosczka.discordstats.dto.validation.ValidUsername;
+import com.github.tobiasmiosczka.discordstats.web.dto.validation.ValidEmail;
+import com.github.tobiasmiosczka.discordstats.web.dto.validation.ValidName;
+import com.github.tobiasmiosczka.discordstats.web.dto.validation.ValidUsername;
 import com.github.tobiasmiosczka.discordstats.model.platform.Gender;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
 public class UserDto {
     @NotNull
     @Size(min = 1)
-    //@ValidUsername
+    @ValidUsername
     private String username;
 
     @NotNull
@@ -20,15 +22,18 @@ public class UserDto {
 
     private Gender gender;
 
+    @ValidName
     private String firstname;
 
+    @ValidName
     private String lastname;
 
+    @Past
     private Date birthdate;
 
     @NotNull
     @Size(min = 1)
-    //@ValidEmail
+    @ValidEmail
     private String email;
 
     public String getUsername() {
