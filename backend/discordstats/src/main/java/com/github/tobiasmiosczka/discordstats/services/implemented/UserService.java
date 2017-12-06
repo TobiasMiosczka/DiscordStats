@@ -1,17 +1,21 @@
 package com.github.tobiasmiosczka.discordstats.services.implemented;
 
+import com.github.tobiasmiosczka.discordstats.events.OnPasswordChangedEvent;
+import com.github.tobiasmiosczka.discordstats.events.OnRegistrationCompleteEvent;
+import com.github.tobiasmiosczka.discordstats.events.OnRequestPasswordResetEvent;
+import com.github.tobiasmiosczka.discordstats.events.OnUserVerifiedEvent;
+import com.github.tobiasmiosczka.discordstats.model.platform.PasswordResetToken;
+import com.github.tobiasmiosczka.discordstats.repositories.IPasswordResetTokenRepository;
 import com.github.tobiasmiosczka.discordstats.web.dto.UserDto;
-import com.github.tobiasmiosczka.discordstats.model.platform.EmailVerificationToken;
+import com.github.tobiasmiosczka.discordstats.model.platform.VerificationToken;
 import com.github.tobiasmiosczka.discordstats.model.platform.Role;
 import com.github.tobiasmiosczka.discordstats.model.platform.User;
-import com.github.tobiasmiosczka.discordstats.repositories.IEmailVerificationTokenRepository;
+import com.github.tobiasmiosczka.discordstats.repositories.IVerificationTokenRepository;
 import com.github.tobiasmiosczka.discordstats.repositories.IUserRepository;
 import com.github.tobiasmiosczka.discordstats.services.IUserService;
-import com.github.tobiasmiosczka.discordstats.web.exception.EmailExistsException;
-import com.github.tobiasmiosczka.discordstats.web.exception.EmailVerificationTokenExpiredException;
-import com.github.tobiasmiosczka.discordstats.web.exception.UnknownEmailVerificationTokenException;
-import com.github.tobiasmiosczka.discordstats.web.exception.UsernameExistsException;
+import com.github.tobiasmiosczka.discordstats.web.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,19 +24,30 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.UUID;
 
 @Service
 public class UserService implements IUserService, UserDetailsService {
 
     private final IUserRepository userRepository;
-    private final IEmailVerificationTokenRepository emailVerificationTokenRepository;
+    private final IVerificationTokenRepository verificationTokenRepository;
+    private final IPasswordResetTokenRepository passwordResetTokenRepository;
+
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(IUserRepository userRepository, IEmailVerificationTokenRepository emailVerificationTokenRepository, PasswordEncoder passwordEncoder) {
+    public UserService(
+            IUserRepository userRepository,
+            IVerificationTokenRepository verificationTokenRepository,
+            IPasswordResetTokenRepository passwordResetTokenRepository,
+            ApplicationEventPublisher applicationEventPublisher,
+            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.emailVerificationTokenRepository = emailVerificationTokenRepository;
+        this.verificationTokenRepository = verificationTokenRepository;
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -52,34 +67,34 @@ public class UserService implements IUserService, UserDetailsService {
     }
 
     @Override
-    public void enableUser(User user) {
+    public User verifyUserByVerificationToken(String token) throws UnknownVerificationTokenException, VerificationTokenExpiredException {
+        VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
+        if (verificationToken == null) {
+            throw new UnknownVerificationTokenException(token);
+        }
+        if (verificationToken.getExpiryDate().before(new Date())) {
+            throw new VerificationTokenExpiredException(token, verificationToken.getExpiryDate());
+        }
+
+        User user = verificationToken.getUser();
         user.setEnabled(true);
         userRepository.save(user);
-    }
 
-    @Override
-    public void confirmUserByEmailVerificationToken(String token) throws UnknownEmailVerificationTokenException, EmailVerificationTokenExpiredException {
-        EmailVerificationToken emailVerificationToken = emailVerificationTokenRepository.findByToken(token);
-        if (emailVerificationToken == null) {
-            throw new UnknownEmailVerificationTokenException(token);
-        }
-        if (emailVerificationToken.getExpiryDate().before(new Date())) {
-            throw new EmailVerificationTokenExpiredException("");
-        }
-        enableUser(emailVerificationToken.getUser());
-        emailVerificationTokenRepository.delete(emailVerificationToken);
+        verificationTokenRepository.delete(verificationToken);
+
+        applicationEventPublisher.publishEvent(new OnUserVerifiedEvent(user));
+
+        return user;
     }
 
     @Override
     public User registerNewUserAccount(UserDto userDto) throws EmailExistsException, UsernameExistsException {
-
         if (userRepository.existsWithEmail(userDto.getEmail())) {
-            throw new EmailExistsException("There is an account with that email address: " + userDto.getEmail());
+            throw new EmailExistsException(userDto.getEmail());
         }
         if (userRepository.existsWithUsername(userDto.getUsername())) {
-            throw new UsernameExistsException("There is an account with that username: " + userDto.getUsername());
+            throw new UsernameExistsException(userDto.getUsername());
         }
-
         User user = new User();
         user.setUsername(userDto.getUsername());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
@@ -89,21 +104,70 @@ public class UserService implements IUserService, UserDetailsService {
         user.setLastname(userDto.getLastname());
         user.setBirthdate(userDto.getBirthdate());
         user.setRole(new HashSet<Role>() {{add(Role.USER);}});
-        return userRepository.save(user);
+
+        userRepository.save(user);
+
+        String token = UUID.randomUUID().toString();
+        VerificationToken verificationToken = createVerificationToken(user, token);
+
+        applicationEventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, verificationToken));
+
+        return user;
     }
 
     @Override
-    public EmailVerificationToken getVerificationToken(String VerificationToken) {
-        return emailVerificationTokenRepository.findByToken(VerificationToken);
+    public VerificationToken createVerificationToken(User user, String token) {
+        VerificationToken verificationToken = new VerificationToken();
+        verificationToken.setExpiryDateInMinutes(60 * 24);
+        verificationToken.setToken(token);
+        verificationToken.setUser(user);
+        return verificationTokenRepository.save(verificationToken);
     }
 
     @Override
-    public void createEmailVerificationToken(User user, String token) {
-        EmailVerificationToken emailVerificationToken = new EmailVerificationToken();
-        emailVerificationToken.setExpiryDateInMinutes(60 * 24);
-        emailVerificationToken.setToken(token);
-        emailVerificationToken.setUser(user);
-        emailVerificationTokenRepository.save(emailVerificationToken);
+    public PasswordResetToken createPasswordResetToken(User user, String token) {
+        PasswordResetToken passwordResetToken = new PasswordResetToken();
+        passwordResetToken.setExpiryDateInMinutes(60 * 24);
+        passwordResetToken.setToken(token);
+        passwordResetToken.setUser(user);
+        return passwordResetTokenRepository.save(passwordResetToken);
+    }
+
+    @Override
+    public User resetPasswordOfUserByResetPasswordTokenAndId(String token, long id, String newPassword) throws UnknownPasswordResetTokenException, PasswordResetTokenExpiredException {
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
+        if (passwordResetToken == null || passwordResetToken.getUser().getId() != id) {
+            throw new UnknownPasswordResetTokenException(token);
+        }
+        if(passwordResetToken.getExpiryDate().before(new Date())) {
+            throw new PasswordResetTokenExpiredException(token, passwordResetToken.getExpiryDate());
+        }
+        changePasswordOfUser(passwordResetToken.getUser(), newPassword);
+        User user = passwordResetToken.getUser();
+        passwordResetTokenRepository.delete(passwordResetToken);
+        return user;
+    }
+
+    @Override
+    public User requestPasswordResetByEmail(String email) throws EmailNotFoundException {
+        User user = getUserByEmail(email);
+
+        String token = UUID.randomUUID().toString();
+        PasswordResetToken passwordResetToken = createPasswordResetToken(user, token);
+
+        if(user == null) {
+            throw new EmailNotFoundException(email);
+        }
+
+        applicationEventPublisher.publishEvent(new OnRequestPasswordResetEvent(user, passwordResetToken));
+        return user;
+    }
+
+    @Override
+    public void changePasswordOfUser(User user, String newPassword) {
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        applicationEventPublisher.publishEvent(new OnPasswordChangedEvent(user));
     }
 
     /**Implemented from UserDetailService*/

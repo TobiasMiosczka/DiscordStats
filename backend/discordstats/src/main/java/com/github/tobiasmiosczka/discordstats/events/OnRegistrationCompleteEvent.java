@@ -1,44 +1,37 @@
 package com.github.tobiasmiosczka.discordstats.events;
 
 import com.github.tobiasmiosczka.discordstats.model.platform.User;
+import com.github.tobiasmiosczka.discordstats.model.platform.VerificationToken;
 import org.springframework.context.ApplicationEvent;
-
-import java.util.Locale;
 
 public class OnRegistrationCompleteEvent extends ApplicationEvent {
 
-    private User registeredUser;
-    private Locale locale;
-    private String appUrl;
+    private User user;
+    private VerificationToken verificationToken;
 
-    public OnRegistrationCompleteEvent(User registeredUser, Locale locale, String appUrl) {
-        super(registeredUser);
-        this.registeredUser = registeredUser;
-        this.locale = locale;
-        this.appUrl = appUrl;
+    public OnRegistrationCompleteEvent(User user, VerificationToken verificationToken) {
+        super(user);
+        this.user = user;
+        this.verificationToken = verificationToken;
     }
 
     public User getRegisteredUser() {
-        return registeredUser;
+        return user;
     }
 
-    public void setRegisteredUser(User registeredUser) {
-        this.registeredUser = registeredUser;
+    public void setUser(User registeredUser) {
+        this.user = user;
     }
 
-    public Locale getLocale() {
-        return locale;
+    public User getUser() {
+        return user;
     }
 
-    public void setLocale(Locale locale) {
-        this.locale = locale;
+    public VerificationToken getVerificationToken() {
+        return verificationToken;
     }
 
-    public String getAppUrl() {
-        return appUrl;
-    }
-
-    public void setAppUrl(String appUrl) {
-        this.appUrl = appUrl;
+    public void setVerificationToken(VerificationToken verificationToken) {
+        this.verificationToken = verificationToken;
     }
 }
