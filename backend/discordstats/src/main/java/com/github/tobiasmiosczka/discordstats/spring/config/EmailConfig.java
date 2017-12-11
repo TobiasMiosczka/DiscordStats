@@ -31,8 +31,6 @@ public class EmailConfig {
     private boolean debug;
     @Value("${mail.smtp.socketFactory.fallback}")
     private boolean fallback;
-    @Value("${mail.from}")
-    private String from;
     @Value("${mail.username}")
     private String username;
     @Value("${mail.password}")

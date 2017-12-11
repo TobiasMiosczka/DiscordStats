@@ -21,6 +21,11 @@ import javax.validation.Valid;
 @RestController
 public class RegistrationController {
 
+    public static final String URL_REGISTRATION = "/registration";
+    public static final String URL_REGISTRATION_CONFIRM = "/registration/confirm";
+    public static final String URL_RESET_PASSWORD = "/registration/reset-password";
+
+
     private final UserService userService;
 
     @Autowired
@@ -28,7 +33,7 @@ public class RegistrationController {
         this.userService = userService;
     }
 
-    @RequestMapping(value = "/registration", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = URL_REGISTRATION, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<User> registerUserAccount(
             @RequestBody @Valid final UserDto userDto
     ) {
@@ -41,7 +46,7 @@ public class RegistrationController {
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/registration/reset-password", method = RequestMethod.GET)
+    @RequestMapping(value = URL_RESET_PASSWORD, method = RequestMethod.GET)
     public String requestPasswordReset(@RequestParam("email") String email) {
         User user = userService.getUserByEmail(email);
         try {
@@ -52,7 +57,7 @@ public class RegistrationController {
         return "Done";
     }
 
-    @RequestMapping(value = "/registration/reset-password", method = RequestMethod.POST)
+    @RequestMapping(value = URL_RESET_PASSWORD, method = RequestMethod.POST)
     public String resetPassword(@RequestParam long id, @RequestParam String token, @RequestBody @Valid PasswordDto passwordDto) {
         try {
             User user = userService.resetPasswordOfUserByResetPasswordTokenAndId(token, id, passwordDto.getPassword());
@@ -64,7 +69,7 @@ public class RegistrationController {
         return "Done";
     }
 
-    @RequestMapping(value = "/registration/confirm", method = RequestMethod.GET)
+    @RequestMapping(value = URL_REGISTRATION_CONFIRM, method = RequestMethod.GET)
     public String confirmRegistration(@RequestParam String token) {
         try {
             User user = userService.verifyUserByVerificationToken(token);

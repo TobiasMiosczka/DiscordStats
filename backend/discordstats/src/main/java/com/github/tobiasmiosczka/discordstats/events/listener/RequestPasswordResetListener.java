@@ -2,6 +2,7 @@ package com.github.tobiasmiosczka.discordstats.events.listener;
 
 import com.github.tobiasmiosczka.discordstats.events.OnRequestPasswordResetEvent;
 import com.github.tobiasmiosczka.discordstats.model.platform.User;
+import com.github.tobiasmiosczka.discordstats.web.controller.RegistrationController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.mail.SimpleMailMessage;
@@ -24,7 +25,8 @@ public class RequestPasswordResetListener implements ApplicationListener<OnReque
 
         String emailAddress = user.getEmail();
         String subject = "Password reset";
-        String confirmationUrl = "http://localhost/registration/reset-password?id=" + user.getId()
+        String confirmationUrl = "http://localhost" + RegistrationController.URL_RESET_PASSWORD
+                + "?id=" + user.getId()
                 + "&token=" + onRequestPasswordResetEvent.getPasswordResetToken().getToken()
                 + "\n Token: " + onRequestPasswordResetEvent.getPasswordResetToken().getToken();
 

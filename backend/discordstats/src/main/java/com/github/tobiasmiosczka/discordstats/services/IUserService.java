@@ -14,12 +14,12 @@ public interface IUserService {
     User getUserByUsernameOrEmail(String usernameOrEmail);
 
     VerificationToken createVerificationToken(User user, String token);
-    PasswordResetToken createPasswordResetToken(User user, String token);
-
     User verifyUserByVerificationToken(String token) throws UnknownVerificationTokenException, VerificationTokenExpiredException;
 
-    void changePasswordOfUser(User user, String newPassword);
+    PasswordResetToken createPasswordResetToken(User user, String token);
     User resetPasswordOfUserByResetPasswordTokenAndId(String token, long id, String password) throws UnknownPasswordResetTokenException, PasswordResetTokenExpiredException;
+
+    void changePasswordOfUser(User user, String newPassword);
 
     User requestPasswordResetByEmail(String email) throws EmailNotFoundException;
 }
