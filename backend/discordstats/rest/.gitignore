@@ -1,4 +1,6 @@
 target/
+src/resources/email.properties
+src/resources/persistence.properties
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
