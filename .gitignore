@@ -1,8 +1,0 @@
-backend/discordstats/src/main/resources/discord.properties
-backend/discordstats/src/main/resources/persistence.properties
-frontend/discordstats/.idea/
-frontend/discordstats/node_modules/
-backend/discordstats/src/main/resources/email.properties
-backend/discordstats/rest/src/main/resources/email.properties
-backend/discordstats/bot/src/main/resources/persistence.properties
-backend/discordstats/rest/src/main/resources/persistence.properties
