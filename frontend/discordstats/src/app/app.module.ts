@@ -11,14 +11,16 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
-import { RegisterService } from './register.service';
 import { GenderPipe } from './pipes/gender.pipe';
 import { GenderToSalutionPipe } from './pipes/gender-to-salution.pipe';
-import {MAT_DATE_LOCALE} from '@angular/material';
-import {HttpClientModule} from '@angular/common/http';
-import {Oauth2Service} from './oauth2/oauth2.service';
+import { MAT_DATE_LOCALE } from '@angular/material';
+import { HttpClientModule } from '@angular/common/http';
+import { GuildsComponent } from './guilds/guilds.component';
+import { DiscordStatsService } from './discord-stats.service';
+import { GuildDetailComponent } from './guild-detail/guild-detail.component';
+import { VoiceChannelDetailComponent } from './voice-channel-detail/voice-channel-detail.component';
+import { TimeTableComponent } from './timetable/timetable.component';
+import { UserDetailComponent } from './user-detail/user-detail.component';
 
 @NgModule({
   declarations: [
@@ -26,10 +28,13 @@ import {Oauth2Service} from './oauth2/oauth2.service';
     HeaderComponent,
     HomeComponent,
     AboutComponent,
-    LoginComponent,
-    RegisterComponent,
     GenderPipe,
-    GenderToSalutionPipe
+    GenderToSalutionPipe,
+    GuildsComponent,
+    GuildDetailComponent,
+    VoiceChannelDetailComponent,
+    TimeTableComponent,
+    UserDetailComponent
   ],
   imports: [
     BrowserModule,
@@ -40,10 +45,9 @@ import {Oauth2Service} from './oauth2/oauth2.service';
     HttpClientModule
   ],
   providers: [
-    RegisterService,
-    Oauth2Service,
+    DiscordStatsService,
     {provide: MAT_DATE_LOCALE, useValue: 'de-DE'}
     ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

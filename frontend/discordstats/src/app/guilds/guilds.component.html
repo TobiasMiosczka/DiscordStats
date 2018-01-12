@@ -1,0 +1,8 @@
+<div mat-card>
+  <h1>Guilds</h1>
+  <div *ngFor="let guild of guilds">
+    <button mat-button class="guild-button" routerLink="/guild/{{guild.id}}">{{guild.name}}</button>
+  </div>
+</div>
+
+

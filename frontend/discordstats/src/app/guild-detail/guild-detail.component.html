@@ -1,0 +1,22 @@
+<div *ngIf="guild">
+  <h1>{{guild.name}}</h1>
+</div>
+<div>
+    <mat-tab-group>
+        <mat-tab label="Info">
+          <h2>Info</h2>
+          
+        </mat-tab>
+        <mat-tab label="Voice Channel">
+          <h2>
+            Voice Channel
+          </h2>
+          <div *ngFor="let voiceChannel of voiceChannels">
+            <button mat-button class="voice-channel-button" routerLink="/voice-channel/{{voiceChannel.id}}">{{voiceChannel.name}}</button>
+          </div>
+        </mat-tab>
+        <mat-tab label="Member">
+          <h2>Member</h2>
+        </mat-tab>
+      </mat-tab-group>
+</div>

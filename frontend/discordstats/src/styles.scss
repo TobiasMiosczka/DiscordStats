@@ -115,7 +115,7 @@ $candy-app-accent: mat-palette($mat-accent, 800, 700, 900);
 
 
 // Create the theme object (a Sass map containing all of the palettes).
-$candy-app-theme:   mat-dark-theme($candy-app-primary, $candy-app-accent);
+$candy-app-theme:   mat-light-theme($candy-app-primary, $candy-app-accent);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
@@ -133,3 +133,5 @@ $candy-app-theme:   mat-dark-theme($candy-app-primary, $candy-app-accent);
 .full-width {
   width: 100%;
 }
+
+body { font-family: Roboto, Arial, sans-serif; margin: 0 }
