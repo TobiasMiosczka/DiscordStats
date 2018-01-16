@@ -1,8 +1,6 @@
 package com.github.tobiasmiosczka.discordstats.persistence.services;
 
-import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordUser;
-import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordVoiceChannel;
-import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordVoiceChannelUsage;
+import com.github.tobiasmiosczka.discordstats.persistence.model.*;
 import com.github.tobiasmiosczka.discordstats.persistence.repositories.DiscordVoiceChannelUsageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +11,7 @@ import java.util.List;
 @Service
 public class DiscordVoiceChannelUsageService {
 
-    private DiscordVoiceChannelUsageRepository discordVoiceChannelUsageRepository;
+    private final DiscordVoiceChannelUsageRepository discordVoiceChannelUsageRepository;
 
     @Autowired
     public DiscordVoiceChannelUsageService(DiscordVoiceChannelUsageRepository discordVoiceChannelUsageRepository) {
@@ -32,5 +30,13 @@ public class DiscordVoiceChannelUsageService {
 
     public List<DiscordVoiceChannelUsage> getByDiscordVoiceChannel(DiscordVoiceChannel discordVoiceChannel, Date dateFrom, Date dateTo) {
         return discordVoiceChannelUsageRepository.findByDiscordVoiceChannel(discordVoiceChannel, dateFrom, dateTo);
+    }
+
+    public DiscordVoiceChannelStats getStats(DiscordVoiceChannel discordVoiceChannel) {
+        return discordVoiceChannelUsageRepository.getStats(discordVoiceChannel);
+    }
+
+    public DiscordGuildStats getStats(DiscordGuild discordGuild) {
+        return discordVoiceChannelUsageRepository.getStats(discordGuild);
     }
 }

@@ -1,7 +1,20 @@
-<div *ngIf="discordUser">
-  <h1>{{discordUser.name}}</h1>
-  <mat-tab-group>
-
+<mat-card *ngIf="discordUser">
+  <mat-card-header>
+    <img *ngIf="discordUser.avatarUrl" mat-card-avatar src="{{discordUser.avatarUrl}}">
+    <img *ngIf="!discordUser.avatarUrl" mat-card-avatar ngSrc="../default.png">
+    <mat-card-title>{{discordUser.name}}</mat-card-title>
+    <mat-card-subtitle *ngIf="discordUser.bot">Bot</mat-card-subtitle>
+    <mat-card-subtitle *ngIf="!discordUser.bot">User</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-tab-group (selectedTabChange)="update()">
+      <mat-tab label="Info">
+        <h2>Info</h2>
+        <h3>User</h3>
+        <p>Name: {{discordUser.name}}</p>
+        <h3>Profile Picture</h3>
+        <img src="{{discordUser.avatarUrl}}">
+      </mat-tab>
       <mat-tab label="Timetable">
         <h2>Timetable</h2>
         <mat-form-field>
@@ -14,17 +27,15 @@
           <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
           <mat-datepicker #picker2></mat-datepicker>
         </mat-form-field>
-        <timetable [data]="discordVoiceChannelUsages"></timetable>
+        <user-timetable [data]="discordVoiceChannelUsages"></user-timetable>
       </mat-tab>
-
-      <mat-tab label="Info">
-        <h2>Info</h2>
-        <img src="{{discordUser.avatarUrl}}">  
-      </mat-tab>
-
       <mat-tab label="Statistics">
         <h2>Statistics</h2>
-
       </mat-tab>
+      <mat-tab label="Guilds">
+        <h2>Guilds</h2>
+        <app-guild-list [guilds]="discordUser.guilds"></app-guild-list>
+      </mat-tab> 
     </mat-tab-group>
-</div>
+  </mat-card-content>
+</mat-card>

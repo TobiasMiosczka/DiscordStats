@@ -1,23 +1,50 @@
-<div *ngIf="discordVoiceChannel">
-    <h1>{{discordVoiceChannel.name}}</h1>
-    <button mat-button routerLink="/guild/{{discordVoiceChannel.discordGuild.id}}">{{discordVoiceChannel.discordGuild.name}}</button>
-    <mat-tab-group>
-        <mat-tab label="Timetable">
-            <h2>Timetable</h2>
-            <mat-form-field>
-                <input matInput [matDatepicker]="picker" placeholder="From" [(ngModel)]="from" (dateChange)="update()">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
-            <mat-form-field>
-                <input matInput [matDatepicker]="picker2" placeholder="To" [(ngModel)]="to" (dateChange)="update()">
-                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                <mat-datepicker #picker2></mat-datepicker>
-            </mat-form-field>
-            <timetable [data]="discordVoiceChannelUsages"></timetable>
-        </mat-tab>
-        <mat-tab label="Statistics">
-            <h2>Statistics</h2>
-        </mat-tab>
-    </mat-tab-group>    
-</div>
+<mat-card *ngIf="discordVoiceChannel">
+    <mat-card-header>
+        <img *ngIf="discordVoiceChannel.discordGuild.iconUrl" mat-card-avatar src="{{discordVoiceChannel.discordGuild.iconUrl}}">
+        <img *ngIf="!discordVoiceChannel.discordGuild.iconUrl" mat-card-avatar ngSrc="../default.png">
+        <mat-card-title>{{discordVoiceChannel.name}}</mat-card-title>
+        <mat-card-subtitle>Voice Channel</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-tab-group (selectedTabChange)="update()">
+            <mat-tab label="Timetable">
+                <h2>Timetable</h2>
+                <mat-form-field>
+                    <input matInput [matDatepicker]="picker" placeholder="From" [(ngModel)]="from" (dateChange)="update()">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput [matDatepicker]="picker2" placeholder="To" [(ngModel)]="to" (dateChange)="update()">
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                </mat-form-field>
+                <channel-timetable [data]="discordVoiceChannelUsages"></channel-timetable>
+            </mat-tab>
+            <mat-tab label="Statistics" *ngIf="discordVoiceChannelStats">
+                <h2>Statistics</h2>
+                <table>
+                    <tr>
+                        <td>Total Connections: </td>
+                        <td class="right">{{discordVoiceChannelStats.count}}x</td>
+                    </tr>
+                    <tr>
+                        <td>Total time spend: </td>
+                        <td class="right">{{discordVoiceChannelStats.sum | SecondsToDurationStringPipe}} </td>
+                    </tr>
+                    <tr>
+                        <td>Average time spend: </td>
+                        <td class="right">{{discordVoiceChannelStats.average | SecondsToDurationStringPipe}} </td>
+                    </tr>
+                    <tr>
+                        <td>Longest time spend: </td>
+                        <td class="right">{{discordVoiceChannelStats.max | SecondsToDurationStringPipe}} </td>
+                    </tr>
+                </table>
+            </mat-tab>
+        </mat-tab-group>  
+    </mat-card-content>  
+    <mat-card-actions>
+        <button mat-raised-button routerLink="/guild/{{discordVoiceChannel.discordGuild.id}}">{{discordVoiceChannel.discordGuild.name}}</button>
+    </mat-card-actions>
+</mat-card>

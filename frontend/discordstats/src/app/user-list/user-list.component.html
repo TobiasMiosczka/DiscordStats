@@ -1,0 +1,9 @@
+<mat-list>
+  <mat-list-item *ngFor="let user of users" routerLink="/user/{{user.id}}">
+    <img matListAvatar *ngIf="user.avatarUrl" src="{{user.avatarUrl}}">
+    <img matListAvatar *ngIf="!user.avatarUrl" ngSrc="../default.png">
+    <h4 mat-line>{{user.name}}</h4>
+    <p mat-line *ngIf="user.bot">Bot</p>
+    <p mat-line *ngIf="!user.bot">User</p>
+  </mat-list-item>
+</mat-list>

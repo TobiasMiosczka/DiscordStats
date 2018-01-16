@@ -3,6 +3,8 @@ import { DiscordGuild } from '../dto/DiscordGuild';
 import { DiscordStatsService } from '../discord-stats.service';
 import { ActivatedRoute } from '@angular/router';
 import { DiscordVoiceChannel } from '../dto/DiscordVoiceChannel';
+import { DiscordUser } from '../dto/DiscordUser';
+import { DiscordGuildStats } from '../dto/DiscordGuildStats';
 
 @Component({
   selector: 'app-guild-detail',
@@ -13,6 +15,8 @@ export class GuildDetailComponent implements OnInit {
   
   guild: DiscordGuild;
   voiceChannels: Array<DiscordVoiceChannel> = new Array<DiscordVoiceChannel>();
+  discordGuildStats: DiscordGuildStats;
+  members: Array<DiscordUser> = new Array<DiscordUser>();
 
   constructor(private route: ActivatedRoute, private discordStatsService: DiscordStatsService) { }
 
@@ -27,6 +31,14 @@ export class GuildDetailComponent implements OnInit {
       this.voiceChannels.sort((c1, c2) => c1.position - c2.position);
     },
       error => {console.log("error");}//TODO
+    );
+    this.discordStatsService.getMembers(guildId).subscribe(
+      data => {this.members = data;},
+      error => {console.log("error");}
+    );
+    this.discordStatsService.getGuildStats(guildId).subscribe(
+      data => {this.discordGuildStats = data;},
+      error => {console.log("error");}
     );
   }
 }

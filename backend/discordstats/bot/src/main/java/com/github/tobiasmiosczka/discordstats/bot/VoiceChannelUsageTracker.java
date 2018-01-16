@@ -23,12 +23,12 @@ import java.util.Map;
 @Component
 public class VoiceChannelUsageTracker extends ListenerAdapter {
 
-    private DiscordVoiceChannelUsageService discordVoiceChannelUsageService;
-    private DiscordVoiceChannelService discordVoiceChannelService;
-    private DiscordUserService discordUserService;
-    private JDA jda;
+    private final DiscordVoiceChannelUsageService discordVoiceChannelUsageService;
+    private final DiscordVoiceChannelService discordVoiceChannelService;
+    private final DiscordUserService discordUserService;
+    private final JDA jda;
 
-    Map<Long, Date> onlineMap = new HashMap<>();
+    private final Map<Long, Date> onlineMap = new HashMap<>();
 
     @Autowired
     VoiceChannelUsageTracker(JDA jda, DiscordVoiceChannelUsageService discordVoiceChannelUsageService, DiscordVoiceChannelService discordVoiceChannelService, DiscordUserService discordUserService) {

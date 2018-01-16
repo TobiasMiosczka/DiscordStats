@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 public class DiscordGuild extends DiscordEntity {
 
     private String name;
+    private String iconUrl;
 
     public String getName() {
         return name;
@@ -13,5 +14,13 @@ public class DiscordGuild extends DiscordEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setIconUrl(String avatarUrl) {
+        this.iconUrl = avatarUrl;
     }
 }

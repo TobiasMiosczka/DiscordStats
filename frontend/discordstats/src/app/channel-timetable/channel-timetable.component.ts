@@ -7,9 +7,9 @@ import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 declare var google:any;
 
 @Component({
-  selector: 'timetable',
-  templateUrl: './timetable.component.html'})
-export class TimeTableComponent implements OnChanges {
+  selector: 'channel-timetable',
+  templateUrl: './channel-timetable.component.html'})
+export class ChannelTimetableComponent implements OnChanges {
 
   googleLoaded: boolean = false; 
 
@@ -32,8 +32,10 @@ export class TimeTableComponent implements OnChanges {
       userCount++;
     }
     let chart = document.getElementById('chart');
-    chart.style.height = (41 * userCount + 50)+"px";
-    new google.visualization.Timeline(chart).draw(dataTable);
+    if(chart != null) {
+      chart.style.height = (41 * userCount + 50)+"px";
+      new google.visualization.Timeline(chart).draw(dataTable);      
+    } 
   }
 
   update(data: Array<DiscordVoiceChannelUsage>) {

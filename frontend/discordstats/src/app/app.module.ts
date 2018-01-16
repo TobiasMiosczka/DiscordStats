@@ -8,33 +8,37 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './/app-routing.module';
 
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
-import { GenderPipe } from './pipes/gender.pipe';
-import { GenderToSalutionPipe } from './pipes/gender-to-salution.pipe';
 import { MAT_DATE_LOCALE } from '@angular/material';
 import { HttpClientModule } from '@angular/common/http';
 import { GuildsComponent } from './guilds/guilds.component';
 import { DiscordStatsService } from './discord-stats.service';
 import { GuildDetailComponent } from './guild-detail/guild-detail.component';
 import { VoiceChannelDetailComponent } from './voice-channel-detail/voice-channel-detail.component';
-import { TimeTableComponent } from './timetable/timetable.component';
+import { ChannelTimetableComponent } from './channel-timetable/channel-timetable.component';
 import { UserDetailComponent } from './user-detail/user-detail.component';
+import { UserTimetableComponent } from './user-timetable/user-timetable.component';
+import { GuildListComponent } from './guild-list/guild-list.component';
+import { UserListComponent } from './user-list/user-list.component';
+import { VoiceChannelListComponent } from './voice-channel-list/voice-channel-list.component';
+import { SecondsToDurationStringPipe } from './pipes/SecondsToDurationStringPipe';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
     HomeComponent,
     AboutComponent,
-    GenderPipe,
-    GenderToSalutionPipe,
+    SecondsToDurationStringPipe,
     GuildsComponent,
     GuildDetailComponent,
     VoiceChannelDetailComponent,
-    TimeTableComponent,
-    UserDetailComponent
+    ChannelTimetableComponent,
+    UserTimetableComponent,
+    UserDetailComponent,
+    GuildListComponent,
+    UserListComponent,
+    VoiceChannelListComponent
   ],
   imports: [
     BrowserModule,

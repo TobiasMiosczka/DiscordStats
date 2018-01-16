@@ -17,7 +17,7 @@ public class LongSerializer {
     public static class Serializer extends JsonSerializer<Long> {
 
         @Override
-        public void serialize(Long aLong, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+        public void serialize(Long aLong, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
             jsonGenerator.writeString(aLong.toString());
         }
     }
@@ -25,7 +25,7 @@ public class LongSerializer {
     public static class Deserializer extends JsonDeserializer<Long> {
 
         @Override
-        public Long deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+        public Long deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
             return Long.valueOf(jsonParser.getText());
         }
     }

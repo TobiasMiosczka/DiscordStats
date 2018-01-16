@@ -20,9 +20,8 @@ public class DiscordConfig {
 
     @Bean
     JDA getJda() throws LoginException, InterruptedException, RateLimitedException {
-        JDA jda = new JDABuilder(AccountType.BOT)
+        return new JDABuilder(AccountType.BOT)
                 .setToken(token)
                 .buildBlocking();
-        return jda;
     }
 }

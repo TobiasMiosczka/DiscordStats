@@ -21,7 +21,7 @@ public class OnlineTimeTracker extends ListenerAdapter {
     private final OnlineTimeService onlineTimeService;
     private final DiscordUserService discordUserService;
 
-    Map<Long, Date> onlineMap = new HashMap<>();
+    private final Map<Long, Date> onlineMap = new HashMap<>();
 
     @Autowired
     public OnlineTimeTracker(JDA jda, OnlineTimeService onlineTimeService, DiscordUserService discordUserService) {

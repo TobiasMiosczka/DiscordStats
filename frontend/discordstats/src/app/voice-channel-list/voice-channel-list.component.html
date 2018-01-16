@@ -1,0 +1,8 @@
+<mat-list>
+    <mat-list-item *ngFor="let voiceChannel of voiceChannels" routerLink="/voice-channel/{{voiceChannel.id}}">
+      <img matListAvatar *ngIf="voiceChannel.discordGuild.iconUrl" src="{{voiceChannel.discordGuild.iconUrl}}">
+      <img matListAvatar *ngIf="!voiceChannel.discordGuild.iconUrl" ngSrc="../default.png">
+      <h4 mat-line>{{voiceChannel.name}}</h4>
+      <p mat-line>Voice Channel</p>
+    </mat-list-item>
+  </mat-list>

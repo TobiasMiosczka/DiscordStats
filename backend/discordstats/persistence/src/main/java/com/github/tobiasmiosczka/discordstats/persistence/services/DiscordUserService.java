@@ -21,11 +21,14 @@ public class DiscordUserService {
         this.discordGuildRepository = discordGuildRepository;
     }
 
-    public DiscordUser addUser(long id, String name, String avatarUrl) {
-        DiscordUser discordUser = new DiscordUser();
+    public DiscordUser addUser(long id, String name, String avatarUrl, boolean isBot) {
+        DiscordUser discordUser = discordUserRepository.findOne(id);
+        if (discordUser == null)
+                discordUser = new DiscordUser();
         discordUser.setId(id);
         discordUser.setName(name);
         discordUser.setAvatarUrl(avatarUrl);
+        discordUser.setBot(isBot);
         return discordUserRepository.save(discordUser);
     }
 
@@ -43,5 +46,23 @@ public class DiscordUserService {
         DiscordUser discordUser = discordUserRepository.findOne(id);
         discordUser.setAvatarUrl(avatarUrl);
         discordUserRepository.save(discordUser);
+    }
+
+    public void addUserToGuild(long userId, long guildId) {
+        DiscordUser discordUser = discordUserRepository.findOne(userId);
+        DiscordGuild discordGuild = discordGuildRepository.findOne(guildId);
+        discordUser.addGuild(discordGuild);
+        discordUserRepository.save(discordUser);
+    }
+
+    public void removeUserFromGuild(long userId, long guildId) {
+        DiscordUser discordUser = discordUserRepository.findOne(userId);
+        DiscordGuild discordGuild = discordGuildRepository.findOne(guildId);
+        discordUser.removeGuild(discordGuild);
+        discordUserRepository.save(discordUser);
+    }
+
+    public List<DiscordUser> getByGuild(DiscordGuild discordGuild) {
+        return discordUserRepository.findByGuild(discordGuild);
     }
 }

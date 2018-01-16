@@ -6,11 +6,19 @@ import {
   MatToolbarModule,
   MatInputModule,
   MatSelectModule,
-  MatDatepickerModule, MatNativeDateModule, MatCardModule, MatTabsModule
+  MatDatepickerModule, 
+  MatNativeDateModule, 
+  MatCardModule, 
+  MatTabsModule, 
+  MatSidenavModule,
+  MatListModule
 } from '@angular/material';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   imports: [
+    FlexLayoutModule,
+    MatListModule,
     MatButtonModule,
     MatToolbarModule,
     MatMenuModule,
@@ -20,9 +28,12 @@ import {
     MatDatepickerModule,
     MatNativeDateModule,
     MatCardModule,
-    MatTabsModule
+    MatTabsModule,
+    MatSidenavModule
   ],
   exports: [
+    FlexLayoutModule,
+    MatListModule,
     MatButtonModule,
     MatToolbarModule,
     MatMenuModule,
@@ -32,7 +43,8 @@ import {
     MatDatepickerModule,
     MatNativeDateModule,
     MatCardModule,
-    MatTabsModule
+    MatTabsModule,
+    MatSidenavModule
   ],
 })
 export class MaterialModule { }

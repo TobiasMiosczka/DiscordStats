@@ -18,6 +18,8 @@ public class DiscordVoiceChannelUsage extends BaseEntity{
 
     private Date dateTo;
 
+    private Long duration;
+
     public DiscordVoiceChannelUsage() {
 
     }
@@ -27,6 +29,11 @@ public class DiscordVoiceChannelUsage extends BaseEntity{
         this.discordUser = discordUser;
         this.dateFrom = dateFrom;
         this.dateTo = dateTo;
+        this.updateDuration();
+    }
+
+    private void updateDuration() {
+        this.duration = (dateTo.getTime() - dateFrom.getTime())/1000;
     }
 
     public DiscordUser getDiscordUser() {
@@ -51,6 +58,7 @@ public class DiscordVoiceChannelUsage extends BaseEntity{
 
     public void setDateFrom(Date dateFrom) {
         this.dateFrom = dateFrom;
+        this.updateDuration();
     }
 
     public Date getDateTo() {
@@ -59,5 +67,10 @@ public class DiscordVoiceChannelUsage extends BaseEntity{
 
     public void setDateTo(Date dateTo) {
         this.dateTo = dateTo;
+        this.updateDuration();
+    }
+
+    public Long getDuration() {
+        return this.duration;
     }
 }

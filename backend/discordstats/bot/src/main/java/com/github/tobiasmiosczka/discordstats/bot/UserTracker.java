@@ -2,16 +2,16 @@ package com.github.tobiasmiosczka.discordstats.bot;
 
 import com.github.tobiasmiosczka.discordstats.persistence.services.DiscordUserService;
 import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
+import net.dv8tion.jda.core.events.guild.member.GuildMemberLeaveEvent;
 import net.dv8tion.jda.core.events.user.UserAvatarUpdateEvent;
 import net.dv8tion.jda.core.events.user.UserNameUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.stream.Collectors;
 
 @Component
 public class UserTracker extends ListenerAdapter{
@@ -28,21 +28,28 @@ public class UserTracker extends ListenerAdapter{
     }
 
     private void updateAll() {
-        for (User user : jda.getUsers()) {
-            addUser(user);
+        for (Guild guild : jda.getGuilds()) {
+            for (Member member : guild.getMembers()) {
+                handleMemberJoinEvent(member, guild);
+            }
         }
     }
 
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
-        for (User user : event.getGuild().getMembers().stream().map(member -> member.getUser()).collect(Collectors.toSet())) {
-            addUser(user);
+        for (Member member : event.getGuild().getMembers()) {
+            handleMemberJoinEvent(member, event.getGuild());
         }
     }
 
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent event) {
-        addUser(event.getUser());
+        handleMemberJoinEvent(event.getMember(), event.getGuild());
+    }
+
+    @Override
+    public void onGuildMemberLeave(GuildMemberLeaveEvent event) {
+        handleMemberLeaveEvent(event.getMember(), event.getGuild());
     }
 
     @Override
@@ -55,7 +62,12 @@ public class UserTracker extends ListenerAdapter{
         discordUserService.updateName(event.getUser().getIdLong(), event.getUser().getName());
     }
 
-    private void addUser(User user) {
-        discordUserService.addUser(user.getIdLong(), user.getName(), user.getAvatarUrl());
+    private void handleMemberJoinEvent(Member member, Guild guild) {
+        discordUserService.addUser(member.getUser().getIdLong(), member.getUser().getName(), member.getUser().getAvatarUrl(), member.getUser().isBot());
+        discordUserService.addUserToGuild(member.getUser().getIdLong(), guild.getIdLong());
+    }
+
+    private void handleMemberLeaveEvent(Member member, Guild guild) {
+        discordUserService.removeUserFromGuild(member.getUser().getIdLong(), guild.getIdLong());
     }
 }

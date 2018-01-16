@@ -1,7 +1,33 @@
-<app-header></app-header>
-<div class="content">
-   <router-outlet></router-outlet> 
-</div>
-<div class="footer" color="primary">
-    <p>(c)Tobias Miosczka 2017-2018</p>
+<div style="height: 100vh;">
+    <mat-toolbar color="primary">
+            <div fxShow="true" fxHide.gt-sm="true">
+                <mat-icon (click)="sidenav.toggle()">menu</mat-icon>                    
+            </div>
+        <span class="toolbar-icon" routerLink="/">DiscordStats</span>
+        <span class="toolbar-spacer"></span>
+        <div fxShow="true" fxHide.lt-md="true">
+            <a mat-button routerLink="/home">Home</a>
+            <a mat-button routerLink="/guild">Guilds</a>
+            <a mat-button href="https://discordapp.com/api/oauth2/authorize?client_id=387018282093248514&permissions=8&redirect_uri=http%3A%2F%2Flocalhost%2Foauth%2Fdiscord&scope=bot">Invite</a>
+            <a mat-button routerLink="/about">About</a>
+        </div>
+    </mat-toolbar>
+    <mat-sidenav-container fxFlexFill class="example-container">
+        <mat-sidenav #sidenav fxLayout="column">
+            <div fxLayout="column">
+                <a mat-button (click)="sidenav.close()" routerLink="/home">Home</a>
+                <a mat-button (click)="sidenav.close()" routerLink="/guild">Guilds</a>
+                <a mat-button (click)="sidenav.close()" href="https://discordapp.com/api/oauth2/authorize?client_id=387018282093248514&permissions=8&redirect_uri=http%3A%2F%2Flocalhost%2Foauth%2Fdiscord&scope=bot">Invite</a>
+                <a mat-button (click)="sidenav.close()" routerLink="/about">About</a>
+            </div>
+            </mat-sidenav>
+        <mat-sidenav-content fxFlexFill>
+            <div class="content">
+                <router-outlet></router-outlet> 
+            </div>
+            <div class="footer" color="primary">
+                <p>(c)Tobias Miosczka 2017-2018</p>
+            </div>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
 </div>

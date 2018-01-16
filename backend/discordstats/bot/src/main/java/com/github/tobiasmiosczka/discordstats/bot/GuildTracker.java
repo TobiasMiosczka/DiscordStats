@@ -6,19 +6,20 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.events.ReconnectedEvent;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
+import net.dv8tion.jda.core.events.guild.update.GuildUpdateIconEvent;
 import net.dv8tion.jda.core.events.guild.update.GuildUpdateNameEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ServerTracker extends ListenerAdapter {
+public class GuildTracker extends ListenerAdapter {
 
     private final DiscordGuildService discordGuildService;
     private final JDA jda;
 
     @Autowired
-    public ServerTracker(JDA jda, DiscordGuildService discordGuildService) {
+    public GuildTracker(JDA jda, DiscordGuildService discordGuildService) {
         this.jda = jda;
         this.jda.addEventListener(this);
         this.discordGuildService = discordGuildService;
@@ -27,7 +28,7 @@ public class ServerTracker extends ListenerAdapter {
 
     private void updateAll() {
         for (Guild guild : jda.getGuilds()) {
-            discordGuildService.addServer(guild.getIdLong(), guild.getName());
+            discordGuildService.addGuild(guild.getIdLong(), guild.getName(), guild.getIconUrl());
         }
     }
 
@@ -38,7 +39,7 @@ public class ServerTracker extends ListenerAdapter {
 
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
-        discordGuildService.addServer(event.getGuild().getIdLong(), event.getGuild().getName());
+        discordGuildService.addGuild(event.getGuild().getIdLong(), event.getGuild().getName(), event.getGuild().getIconUrl());
     }
 
     @Override
@@ -49,5 +50,10 @@ public class ServerTracker extends ListenerAdapter {
     @Override
     public void onGuildUpdateName(GuildUpdateNameEvent event) {
         discordGuildService.changeServerName(event.getGuild().getIdLong(), event.getGuild().getName());
+    }
+
+    @Override
+    public void onGuildUpdateIcon(GuildUpdateIconEvent event) {
+        discordGuildService.changeGuildIcon(event.getGuild().getIdLong(), event.getGuild().getIconUrl());
     }
 }

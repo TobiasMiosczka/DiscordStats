@@ -17,10 +17,11 @@ public class DiscordGuildService {
         this.discordGuildRepository = discordGuildRepository;
     }
 
-    public void addServer(long id, String name) {
+    public void addGuild(long id, String name, String iconUrl) {
         DiscordGuild server = new DiscordGuild();
         server.setId(id);
         server.setName(name);
+        server.setIconUrl(iconUrl);
         discordGuildRepository.save(server);
     }
 
@@ -36,5 +37,11 @@ public class DiscordGuildService {
 
     public DiscordGuild getById(long id) {
         return discordGuildRepository.findOne(id);
+    }
+
+    public void changeGuildIcon(long guildId, String iconUrl) {
+        DiscordGuild discordGuild = discordGuildRepository.getOne(guildId);
+        discordGuild.setIconUrl(iconUrl);
+        discordGuildRepository.save(discordGuild);
     }
 }

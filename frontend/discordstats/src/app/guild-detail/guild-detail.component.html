@@ -1,22 +1,51 @@
-<div *ngIf="guild">
-  <h1>{{guild.name}}</h1>
-</div>
-<div>
+<mat-card *ngIf="guild">
+  <mat-card-header color="primary">
+    <img *ngIf="guild.iconUrl" mat-card-avatar src="{{guild.iconUrl}}">
+    <img *ngIf="!guild.iconUrl" mat-card-avatar ngSrc="../default.png">
+    <mat-card-title>{{guild.name}}</mat-card-title>
+    <mat-card-subtitle>Guild</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
     <mat-tab-group>
-        <mat-tab label="Info">
-          <h2>Info</h2>
-          
-        </mat-tab>
-        <mat-tab label="Voice Channel">
-          <h2>
-            Voice Channel
-          </h2>
-          <div *ngFor="let voiceChannel of voiceChannels">
-            <button mat-button class="voice-channel-button" routerLink="/voice-channel/{{voiceChannel.id}}">{{voiceChannel.name}}</button>
-          </div>
-        </mat-tab>
-        <mat-tab label="Member">
-          <h2>Member</h2>
-        </mat-tab>
-      </mat-tab-group>
-</div>
+      <mat-tab label="Info">
+        <h2>Info</h2>   
+        <p>Name: {{guild.name}}</p>
+      </mat-tab>
+      <mat-tab label="Voice Channel">
+        <h2>
+          Voice Channel
+        </h2>
+        <app-voice-channel-list [voiceChannels]="voiceChannels"></app-voice-channel-list>
+      </mat-tab>
+      <mat-tab label="Member">
+        <h2>Member</h2>
+        <app-user-list [users]="members"></app-user-list>   
+      </mat-tab>
+      <mat-tab label="Statistics" *ngIf="discordGuildStats">
+          <h2>Statistics</h2>
+          <table>
+              <tr>
+                  <td>Total Connections: </td>
+                  <td class="right">{{discordGuildStats.count}}x</td>
+                  <td></td>
+              </tr>
+              <tr>
+                  <td>Total time spend: </td>
+                  <td class="right">{{discordGuildStats.sum | SecondsToDurationStringPipe}} </td>
+                  <td>Seconds</td>
+              </tr>
+              <tr>
+                  <td>Average time spend: </td>
+                  <td class="right">{{discordGuildStats.average | SecondsToDurationStringPipe}} </td>
+                  <td>Seconds</td>
+              </tr>
+              <tr>
+                  <td>Longest time spend: </td>
+                  <td class="right">{{discordGuildStats.max | SecondsToDurationStringPipe}} </td>
+                  <td>Seconds</td>
+              </tr>
+          </table>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card-content>
+</mat-card>

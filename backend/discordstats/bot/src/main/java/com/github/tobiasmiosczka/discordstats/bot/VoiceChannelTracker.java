@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class VoiceChannelTracker extends ListenerAdapter {
 
-    private DiscordVoiceChannelService channelService;
-    private JDA jda;
+    private final DiscordVoiceChannelService channelService;
+    private final JDA jda;
 
     @Autowired
     VoiceChannelTracker(JDA jda, DiscordVoiceChannelService channelService) {
