@@ -8,8 +8,26 @@
   <mat-card-content>
     <mat-tab-group>
       <mat-tab label="Info">
-        <h2>Info</h2>   
-        <p>Name: {{guild.name}}</p>
+        <h2>Info</h2>
+        <table>
+          <tr>
+            <td>Name</td>
+            <td> : </td>
+            <td>{{guild.name}}</td>
+          </tr>
+          <tr>
+            <td>Number of Members</td>
+            <td> : </td>
+            <td>{{members.length}}</td>
+          </tr>
+          <tr>
+            <td>Number of Voice Channels</td>
+            <td> : </td>
+            <td>{{voiceChannels.length}}</td>
+          </tr>
+          <h2>Guild Icon</h2>
+          <img src="{{guild.iconUrl}}">
+        </table>   
       </mat-tab>
       <mat-tab label="Voice Channel">
         <h2>
@@ -25,24 +43,24 @@
           <h2>Statistics</h2>
           <table>
               <tr>
-                  <td>Total Connections: </td>
+                  <td>Total Connections</td>
+                  <td> : </td>
                   <td class="right">{{discordGuildStats.count}}x</td>
-                  <td></td>
               </tr>
               <tr>
-                  <td>Total time spend: </td>
+                  <td>Total time spend</td>
+                  <td> : </td>
                   <td class="right">{{discordGuildStats.sum | SecondsToDurationStringPipe}} </td>
-                  <td>Seconds</td>
               </tr>
               <tr>
-                  <td>Average time spend: </td>
+                  <td>Average time spend</td>
+                  <td> : </td>
                   <td class="right">{{discordGuildStats.average | SecondsToDurationStringPipe}} </td>
-                  <td>Seconds</td>
               </tr>
               <tr>
-                  <td>Longest time spend: </td>
+                  <td>Longest time spend</td>
+                  <td> : </td>
                   <td class="right">{{discordGuildStats.max | SecondsToDurationStringPipe}} </td>
-                  <td>Seconds</td>
               </tr>
           </table>
       </mat-tab>

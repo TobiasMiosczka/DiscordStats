@@ -29,9 +29,31 @@
         </mat-form-field>
         <user-timetable [data]="discordVoiceChannelUsages"></user-timetable>
       </mat-tab>
-      <mat-tab label="Statistics">
+      <mat-tab label="Statistics" *ngIf="discordUserStats">
         <h2>Statistics</h2>
-      </mat-tab>
+        <table>
+            <tr>
+                <td>Total Connections</td>
+                <td> : </td>
+                <td class="right">{{discordUserStats.count}}x</td>
+            </tr>
+            <tr>
+                <td>Total time spend</td>
+                <td> : </td>
+                <td class="right">{{discordUserStats.sum | SecondsToDurationStringPipe}} </td>
+            </tr>
+            <tr>
+                <td>Average time spend</td>
+                <td> : </td>
+                <td class="right">{{discordUserStats.average | SecondsToDurationStringPipe}} </td>
+            </tr>
+            <tr>
+                <td>Longest time spend</td>
+                <td> : </td>
+                <td class="right">{{discordUserStats.max | SecondsToDurationStringPipe}} </td>
+            </tr>
+        </table>
+    </mat-tab>
       <mat-tab label="Guilds">
         <h2>Guilds</h2>
         <app-guild-list [guilds]="discordUser.guilds"></app-guild-list>

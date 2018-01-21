@@ -1,8 +1,8 @@
 package com.github.tobiasmiosczka.discordstats.rest.web.controller;
 
 import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordGuild;
+import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordStats;
 import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordVoiceChannel;
-import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordVoiceChannelStats;
 import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordVoiceChannelUsage;
 import com.github.tobiasmiosczka.discordstats.persistence.services.DiscordGuildService;
 import com.github.tobiasmiosczka.discordstats.persistence.services.DiscordVoiceChannelService;
@@ -50,7 +50,7 @@ public class VoiceChannelController {
     }
 
     @RequestMapping(value = "/{channelId}/stats")
-    public DiscordVoiceChannelStats getStatsByDiscordVoiceChannel(@PathVariable() long channelId) {
+    public DiscordStats getStatsByDiscordVoiceChannel(@PathVariable() long channelId) {
         DiscordVoiceChannel discordVoiceChannel = discordVoiceChannelService.getById(channelId);
         return discordVoiceChannelUsageService.getStats(discordVoiceChannel);
     }

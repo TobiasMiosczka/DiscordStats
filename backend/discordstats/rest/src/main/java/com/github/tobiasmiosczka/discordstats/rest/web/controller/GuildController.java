@@ -1,7 +1,7 @@
 package com.github.tobiasmiosczka.discordstats.rest.web.controller;
 
 import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordGuild;
-import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordGuildStats;
+import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordStats;
 import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordUser;
 import com.github.tobiasmiosczka.discordstats.persistence.services.DiscordGuildService;
 import com.github.tobiasmiosczka.discordstats.persistence.services.DiscordUserService;
@@ -45,7 +45,7 @@ public class GuildController {
     }
 
     @RequestMapping(value = "/{guildId}/stats", method = RequestMethod.GET)
-    public DiscordGuildStats getStats(@PathVariable long guildId) {
+    public DiscordStats getStats(@PathVariable long guildId) {
         DiscordGuild discordGuild = discordGuildService.getById(guildId);
         return discordVoiceChannelUsageService.getStats(discordGuild);
     }

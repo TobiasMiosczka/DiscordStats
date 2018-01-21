@@ -3,6 +3,7 @@ import { DiscordStatsService } from '../discord-stats.service';
 import { ActivatedRoute } from '@angular/router';
 import { DiscordUser } from '../dto/DiscordUser';
 import { DiscordVoiceChannelUsage } from '../dto/DiscordVoiceChannelUsage';
+import { DiscordStats } from '../dto/DiscordStats';
 
 @Component({
   selector: 'app-user-detail',
@@ -12,6 +13,7 @@ import { DiscordVoiceChannelUsage } from '../dto/DiscordVoiceChannelUsage';
 export class UserDetailComponent implements OnInit {
 
   discordUser: DiscordUser;
+  discordUserStats: DiscordStats;
   discordVoiceChannelUsages: Array<DiscordVoiceChannelUsage> = new Array<DiscordVoiceChannelUsage>();
 
   now: Date = new Date();
@@ -26,6 +28,10 @@ export class UserDetailComponent implements OnInit {
       data => {this.discordUser = data;},
       error => {console.log("Error");}
     );
+    this.discordStatsService.getUserStats(userId).subscribe(
+      data => {this.discordUserStats = data;},
+      error => {console.log("Error");}
+    )
     this.update();
   }
 

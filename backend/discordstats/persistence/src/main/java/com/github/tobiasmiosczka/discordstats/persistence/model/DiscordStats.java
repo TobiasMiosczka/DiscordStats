@@ -1,16 +1,17 @@
 package com.github.tobiasmiosczka.discordstats.persistence.model;
 
-public class DiscordGuildStats {
+
+public class DiscordStats {
     private long count;
     private long sum;
     private long max;
     private double average;
 
-    public DiscordGuildStats(Long connections, Long totalTime, Long max, Double average) {
+    public DiscordStats(Long connections, Long totalTime, Double average, Long max) {
         this.count = (connections != null) ? connections : 0;
         this.sum = (totalTime != null) ? totalTime : 0;
-        this.max = (max != null) ? max : 0;
         this.average = (average != null) ? average : 0;
+        this.max = (max != null) ? max : 0;
 
     }
 

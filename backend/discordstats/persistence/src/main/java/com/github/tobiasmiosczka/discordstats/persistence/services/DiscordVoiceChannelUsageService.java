@@ -32,11 +32,15 @@ public class DiscordVoiceChannelUsageService {
         return discordVoiceChannelUsageRepository.findByDiscordVoiceChannel(discordVoiceChannel, dateFrom, dateTo);
     }
 
-    public DiscordVoiceChannelStats getStats(DiscordVoiceChannel discordVoiceChannel) {
+    public DiscordStats getStats(DiscordVoiceChannel discordVoiceChannel) {
         return discordVoiceChannelUsageRepository.getStats(discordVoiceChannel);
     }
 
-    public DiscordGuildStats getStats(DiscordGuild discordGuild) {
+    public DiscordStats getStats(DiscordGuild discordGuild) {
         return discordVoiceChannelUsageRepository.getStats(discordGuild);
+    }
+
+    public DiscordStats getStats(DiscordUser discordUser) {
+        return discordVoiceChannelUsageRepository.getStats(discordUser);
     }
 }

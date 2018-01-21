@@ -3,6 +3,7 @@ package com.github.tobiasmiosczka.discordstats.bot;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -20,8 +21,10 @@ public class DiscordConfig {
 
     @Bean
     JDA getJda() throws LoginException, InterruptedException, RateLimitedException {
-        return new JDABuilder(AccountType.BOT)
+        JDA jda = new JDABuilder(AccountType.BOT)
                 .setToken(token)
                 .buildBlocking();
+        jda.getPresence().setGame(Game.of(Game.GameType.DEFAULT, "DiscordSats", "http://tomcat.wookiedaris.com"));
+        return jda;
     }
 }

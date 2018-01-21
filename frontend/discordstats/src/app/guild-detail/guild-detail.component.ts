@@ -4,7 +4,7 @@ import { DiscordStatsService } from '../discord-stats.service';
 import { ActivatedRoute } from '@angular/router';
 import { DiscordVoiceChannel } from '../dto/DiscordVoiceChannel';
 import { DiscordUser } from '../dto/DiscordUser';
-import { DiscordGuildStats } from '../dto/DiscordGuildStats';
+import { DiscordStats } from '../dto/DiscordStats';
 
 @Component({
   selector: 'app-guild-detail',
@@ -15,7 +15,7 @@ export class GuildDetailComponent implements OnInit {
   
   guild: DiscordGuild;
   voiceChannels: Array<DiscordVoiceChannel> = new Array<DiscordVoiceChannel>();
-  discordGuildStats: DiscordGuildStats;
+  discordGuildStats: DiscordStats;
   members: Array<DiscordUser> = new Array<DiscordUser>();
 
   constructor(private route: ActivatedRoute, private discordStatsService: DiscordStatsService) { }

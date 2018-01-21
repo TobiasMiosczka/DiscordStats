@@ -11,40 +11,47 @@ declare var google:any;
   templateUrl: './channel-timetable.component.html'})
 export class ChannelTimetableComponent implements OnChanges {
 
-  googleLoaded: boolean = false; 
+  googleLoaded: boolean = false;
+
+  dataTable: any;
+  chart: any;
+  container: any;
 
   @Input()
   data: Array<DiscordVoiceChannelUsage> = new Array<DiscordVoiceChannelUsage>();
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.update(this.data);
+    this.update();
   }
 
-  drawChart(data: Array<DiscordVoiceChannelUsage>){
+  drawChart(){
+    this.dataTable = new google.visualization.DataTable();
+    this.dataTable.addColumn({ type: 'string', id: 'User' });
+    this.dataTable.addColumn({ type: 'date', id: 'Start' });
+    this.dataTable.addColumn({ type: 'date', id: 'End' });
+
     let userCount: number = 0;
-    let dataTable = new google.visualization.DataTable();
-    dataTable.addColumn({ type: 'string', id: 'User' });
-    dataTable.addColumn({ type: 'date', id: 'Start' });
-    dataTable.addColumn({ type: 'date', id: 'End' });
-    for(let i of data) {
-      dataTable.addRows([[ i.discordUser.name, new Date(i.dateFrom), new Date(i.dateTo) ]]);
+    for(let i of this.data) {
+      this.dataTable.addRow([ i.discordUser.name, new Date(i.dateFrom), new Date(i.dateTo) ]);
       //TODO: only count distinct user
       userCount++;
     }
-    let chart = document.getElementById('chart');
-    if(chart != null) {
-      chart.style.height = (41 * userCount + 50)+"px";
-      new google.visualization.Timeline(chart).draw(dataTable);      
+    
+    if(this.container == null) {
+      this.container = document.getElementById('chart');
+      this.chart = new google.visualization.Timeline(this.container);   
     } 
+    this.container.style.height = (41 * userCount + 100) + "px";
+    this.chart.draw(this.dataTable);   
   }
 
-  update(data: Array<DiscordVoiceChannelUsage>) {
+  update() {
     if(this.data.length > 0) {
       if(!this.googleLoaded) {
         google.charts.load('current',  {packages: ['timeline']});
         this.googleLoaded = true;
       }
-      google.charts.setOnLoadCallback(() =>  this.drawChart(data));
+      google.charts.setOnLoadCallback(() =>  this.drawChart());
     }
   }
 }

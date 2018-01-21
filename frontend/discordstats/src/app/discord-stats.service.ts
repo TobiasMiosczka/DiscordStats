@@ -5,12 +5,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { DiscordVoiceChannelUsage } from './dto/DiscordVoiceChannelUsage';
 import { DiscordUser } from './dto/DiscordUser';
-import { DiscordGuildStats } from './dto/DiscordGuildStats';
+import { DiscordStats } from './dto/DiscordStats';
 
 @Injectable()
 export class DiscordStatsService {
 
-  URL = 'http://tomcat.wookiedaris.com:9091/rest/api';
+  URL = 'http://discordstats.wookiedaris.com:9091/rest/api';
   URL_GUILD = '/guild';
   URL_VOICECHANNEL = '/voicechannel';
   URL_USER = '/user';
@@ -49,12 +49,16 @@ export class DiscordStatsService {
     return this.http.get<Array<DiscordUser>>(this.URL + this.URL_GUILD + '/' + guildId + '/user');
   }
 
-  getGuildStats(guildId: string): Observable<DiscordGuildStats> {
-    return this.http.get<DiscordGuildStats>(this.URL + this.URL_GUILD + '/' + guildId + '/stats');
+  getGuildStats(guildId: string): Observable<DiscordStats> {
+    return this.http.get<DiscordStats>(this.URL + this.URL_GUILD + '/' + guildId + '/stats');
   }
 
-  getVoiceChannelStats(voiceChannelId: string): Observable<DiscordGuildStats> {
-    return this.http.get<DiscordGuildStats>(this.URL + this.URL_VOICECHANNEL + '/' + voiceChannelId + '/stats');
+  getVoiceChannelStats(voiceChannelId: string): Observable<DiscordStats> {
+    return this.http.get<DiscordStats>(this.URL + this.URL_VOICECHANNEL + '/' + voiceChannelId + '/stats');
+  }
+
+  getUserStats(userId: string): Observable<DiscordStats> {
+    return this.http.get<DiscordStats>(this.URL + this.URL_USER + '/' + userId + '/stats');
   }
 
   serializeDate(date: Date): string {

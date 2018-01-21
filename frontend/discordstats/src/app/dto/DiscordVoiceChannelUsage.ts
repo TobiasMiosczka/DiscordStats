@@ -6,4 +6,5 @@ export interface DiscordVoiceChannelUsage {
     discordVoiceChannel: DiscordVoiceChannel;
     dateFrom: Date;
     dateTo: Date;
+    duration: number;
 }

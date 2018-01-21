@@ -1,5 +1,6 @@
 package com.github.tobiasmiosczka.discordstats.rest.web.controller;
 
+import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordStats;
 import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordUser;
 import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordVoiceChannelUsage;
 import com.github.tobiasmiosczka.discordstats.persistence.services.DiscordUserService;
@@ -36,5 +37,11 @@ public class UserController {
     public List<DiscordVoiceChannelUsage> getUserVoiceChannelUsage(@PathVariable Long userId, @RequestParam @DateTimeFormat(pattern = PATTERN) Date from, @RequestParam @DateTimeFormat(pattern = PATTERN) Date to) {
         DiscordUser discordUser = discordUserService.getById(userId);
         return discordVoiceChannelUsageService.getByUser(discordUser, from, to);
+    }
+
+    @RequestMapping(value = "/{userId}/stats", method = RequestMethod.GET)
+    public DiscordStats getStats(@PathVariable long userId) {
+        DiscordUser discordUser = discordUserService.getById(userId);
+        return discordVoiceChannelUsageService.getStats(discordUser);
     }
 }

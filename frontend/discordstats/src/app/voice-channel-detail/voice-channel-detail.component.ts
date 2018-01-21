@@ -4,7 +4,7 @@ import { DiscordVoiceChannelUsage } from '../dto/DiscordVoiceChannelUsage';
 import { ActivatedRoute } from '@angular/router';
 import { DiscordVoiceChannel } from '../dto/DiscordVoiceChannel';
 import { Observable } from 'rxjs/Observable';
-import { DiscordVoiceChannelStats } from '../dto/DiscordVoiceChannelStats';
+import { DiscordStats } from '../dto/DiscordStats';
 
 @Component({
   selector: 'app-voice-channel-detail',
@@ -15,7 +15,7 @@ export class VoiceChannelDetailComponent implements OnInit {
 
   discordVoiceChannel: DiscordVoiceChannel;
   discordVoiceChannelUsages: Array<DiscordVoiceChannelUsage> = new Array<DiscordVoiceChannelUsage>();
-  discordVoiceChannelStats: DiscordVoiceChannelStats;
+  discordVoiceChannelStats: DiscordStats;
 
   now: Date = new Date();
   from: Date = new Date(this.now.getFullYear(), this.now.getMonth(), this.now.getDate() - 1, this.now.getHours(), this.now.getMinutes(), this.now.getSeconds());

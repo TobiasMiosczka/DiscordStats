@@ -2,6 +2,7 @@ package com.github.tobiasmiosczka.discordstats.bot;
 
 import com.github.tobiasmiosczka.discordstats.persistence.services.DiscordUserService;
 import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
