@@ -11,7 +11,8 @@ import {
   MatCardModule, 
   MatTabsModule, 
   MatSidenavModule,
-  MatListModule
+  MatListModule,
+  MatDialogModule
 } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -29,7 +30,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatNativeDateModule,
     MatCardModule,
     MatTabsModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatDialogModule
   ],
   exports: [
     FlexLayoutModule,
@@ -44,7 +46,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatNativeDateModule,
     MatCardModule,
     MatTabsModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatDialogModule
   ],
 })
 export class MaterialModule { }

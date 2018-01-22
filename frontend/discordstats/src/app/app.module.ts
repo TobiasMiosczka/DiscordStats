@@ -16,13 +16,14 @@ import { GuildsComponent } from './guilds/guilds.component';
 import { DiscordStatsService } from './discord-stats.service';
 import { GuildDetailComponent } from './guild-detail/guild-detail.component';
 import { VoiceChannelDetailComponent } from './voice-channel-detail/voice-channel-detail.component';
-import { ChannelTimetableComponent } from './channel-timetable/channel-timetable.component';
 import { UserDetailComponent } from './user-detail/user-detail.component';
-import { UserTimetableComponent } from './user-timetable/user-timetable.component';
 import { GuildListComponent } from './guild-list/guild-list.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { VoiceChannelListComponent } from './voice-channel-list/voice-channel-list.component';
 import { SecondsToDurationStringPipe } from './pipes/SecondsToDurationStringPipe';
+import { ChannelTimetableComponent } from './timetable/channel-timetable.component';
+import { UserTimetableComponent } from './timetable/user-timetable.component';
+import { DiscordVoiceChannelUsageDialogComponent } from './discord-voice-channel-usage-dialog/discord-voice-channel-usage-dialog.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { SecondsToDurationStringPipe } from './pipes/SecondsToDurationStringPipe
     UserDetailComponent,
     GuildListComponent,
     UserListComponent,
-    VoiceChannelListComponent
+    VoiceChannelListComponent,
+    DiscordVoiceChannelUsageDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -52,6 +54,7 @@ import { SecondsToDurationStringPipe } from './pipes/SecondsToDurationStringPipe
     DiscordStatsService,
     {provide: MAT_DATE_LOCALE, useValue: 'de-DE'}
     ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [DiscordVoiceChannelUsageDialogComponent]
 })
 export class AppModule {}

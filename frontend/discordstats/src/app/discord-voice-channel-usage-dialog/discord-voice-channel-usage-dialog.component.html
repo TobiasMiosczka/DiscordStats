@@ -1,0 +1,35 @@
+<div  *ngIf="data">
+    <mat-card-header color="primary">
+        <img *ngIf="data.discordUser.avatarUrl" mat-card-avatar src="{{data.discordUser.avatarUrl}}">
+        <img *ngIf="!data.discordUser.avatarUrl" mat-card-avatar ngSrc="../default.png">
+        <mat-card-title>{{data.discordUser.name}}</mat-card-title>
+        <mat-card-subtitle>In {{data.discordVoiceChannel.name}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-dialog-content>
+        <table>
+            <tr>
+                <td>Begin</td>
+                <td> : </td>
+                <td>{{data.dateFrom | date:'dd.MM.yyyy HH:mm:ss'}}</td>
+            </tr>
+            <tr>
+                <td>End</td>
+                <td> : </td>
+                <td>{{data.dateTo | date:'dd.MM.yyyy HH:mm:ss'}}</td>
+            </tr>
+            <tr>
+                <td>Duration</td>
+                <td> : </td>
+                <td>{{data.duration | SecondsToDurationStringPipe}}</td>
+            </tr>
+        </table>  
+    </mat-dialog-content>
+    <mat-dialog-actions>
+            <button mat-button mat-dialog-close routerLink="/voice-channel/{{data.discordVoiceChannel.id}}">
+                {{data.discordVoiceChannel.name}}
+            </button>
+            <button mat-button mat-dialog-close routerLink="/user/{{data.discordUser.id}}">
+                {{data.discordUser.name}}
+            </button>
+    </mat-dialog-actions>
+</div>
