@@ -2,7 +2,7 @@ DiscordStats
 ======================================================================
 DiscordStats is a bot for [Discord][1] using the [Discord API][2] to track and display data about guilds. 
 
-A live version can be viewed [here][3].
+A live running instance can be viewed [here][3].
 
 
 System Requirements
