@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DiscordVoiceChannel } from '../dto/DiscordVoiceChannel';
 import { DiscordUser } from '../dto/DiscordUser';
 import { DiscordStats } from '../dto/DiscordStats';
+import { DiscordVoiceChannelUsage } from '../dto/DiscordVoiceChannelUsage';
 
 @Component({
   selector: 'app-guild-detail',
@@ -16,6 +17,7 @@ export class GuildDetailComponent implements OnInit {
   guild: DiscordGuild;
   voiceChannels: Array<DiscordVoiceChannel> = new Array<DiscordVoiceChannel>();
   discordGuildStats: DiscordStats;
+  longestDiscordVoiceChannelUsage: Array<DiscordVoiceChannelUsage>;
   members: Array<DiscordUser> = new Array<DiscordUser>();
 
   constructor(private route: ActivatedRoute, private discordStatsService: DiscordStatsService) { }
@@ -38,6 +40,10 @@ export class GuildDetailComponent implements OnInit {
     );
     this.discordStatsService.getGuildStats(guildId).subscribe(
       data => {this.discordGuildStats = data;},
+      error => {console.log("error");}
+    );
+    this.discordStatsService.getGuildLongestVoiceChannelUsage(guildId).subscribe(
+      data => {this.longestDiscordVoiceChannelUsage = data;},
       error => {console.log("error");}
     );
   }

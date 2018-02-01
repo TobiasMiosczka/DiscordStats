@@ -24,6 +24,7 @@ import { SecondsToDurationStringPipe } from './pipes/SecondsToDurationStringPipe
 import { ChannelTimetableComponent } from './timetable/channel-timetable.component';
 import { UserTimetableComponent } from './timetable/user-timetable.component';
 import { DiscordVoiceChannelUsageDialogComponent } from './discord-voice-channel-usage-dialog/discord-voice-channel-usage-dialog.component';
+import { VoiceChannelUsagePreviewComponent } from './voice-channel-usage-preview/voice-channel-usage-preview.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { DiscordVoiceChannelUsageDialogComponent } from './discord-voice-channel
     GuildListComponent,
     UserListComponent,
     VoiceChannelListComponent,
-    DiscordVoiceChannelUsageDialogComponent
+    DiscordVoiceChannelUsageDialogComponent,
+    VoiceChannelUsagePreviewComponent
   ],
   imports: [
     BrowserModule,

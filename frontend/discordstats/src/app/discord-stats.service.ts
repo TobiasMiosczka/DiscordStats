@@ -61,6 +61,18 @@ export class DiscordStatsService {
     return this.http.get<DiscordStats>(this.URL + this.URL_USER + '/' + userId + '/stats');
   }
 
+  getGuildLongestVoiceChannelUsage(guildId: string): Observable<Array<DiscordVoiceChannelUsage>> {
+    return this.http.get<Array<DiscordVoiceChannelUsage>>(this.URL + this.URL_GUILD + '/' + guildId + '/longest-voice-channel-usage');
+  }
+
+  getVoiceChannelLongestVoiceChannelUsage(voiceChannelId: string): Observable<Array<DiscordVoiceChannelUsage>> {
+    return this.http.get<Array<DiscordVoiceChannelUsage>>(this.URL + this.URL_VOICECHANNEL + '/' + voiceChannelId + '/longest-voice-channel-usage');
+  }
+
+  getUserLongestVoiceChannelUsage(userId: string): Observable<Array<DiscordVoiceChannelUsage>> {
+    return this.http.get<Array<DiscordVoiceChannelUsage>>(this.URL + this.URL_USER + '/' + userId + '/longest-voice-channel-usage');
+  }
+
   serializeDate(date: Date): string {
     return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() ;
   }

@@ -16,6 +16,7 @@ export class VoiceChannelDetailComponent implements OnInit {
   discordVoiceChannel: DiscordVoiceChannel;
   discordVoiceChannelUsages: Array<DiscordVoiceChannelUsage> = new Array<DiscordVoiceChannelUsage>();
   discordVoiceChannelStats: DiscordStats;
+  longestDiscordVoiceChannelUsage: Array<DiscordVoiceChannelUsage>;
 
   now: Date = new Date();
   from: Date = new Date(this.now.getFullYear(), this.now.getMonth(), this.now.getDate() - 1, this.now.getHours(), this.now.getMinutes(), this.now.getSeconds());
@@ -31,6 +32,10 @@ export class VoiceChannelDetailComponent implements OnInit {
     );
     this.discordStatsService.getVoiceChannelStats(channelId).subscribe(
       data => {this.discordVoiceChannelStats = data; },
+      error => {console.log("error");}
+    );
+    this.discordStatsService.getVoiceChannelLongestVoiceChannelUsage(channelId).subscribe(
+      data => {this.longestDiscordVoiceChannelUsage = data;},
       error => {console.log("error");}
     );
     this.update();

@@ -2,3 +2,4 @@ frontend/discordstats/node_modules/
 frontend/discordstats/dist/
 backend/discordstats/persistence/src/main/resources/persistence.properties
 backend/discordstats/bot/src/main/discord.properties
+backend/discordstats/bot/src/main/resources/discord.properties

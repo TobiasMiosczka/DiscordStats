@@ -2,6 +2,7 @@ package com.github.tobiasmiosczka.discordstats.rest.web.controller;
 
 import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordStats;
 import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordUser;
+import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordVoiceChannel;
 import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordVoiceChannelUsage;
 import com.github.tobiasmiosczka.discordstats.persistence.services.DiscordUserService;
 import com.github.tobiasmiosczka.discordstats.persistence.services.DiscordVoiceChannelUsageService;
@@ -43,5 +44,11 @@ public class UserController {
     public DiscordStats getStats(@PathVariable long userId) {
         DiscordUser discordUser = discordUserService.getById(userId);
         return discordVoiceChannelUsageService.getStats(discordUser);
+    }
+
+    @RequestMapping(value = "/{userId}/longest-voice-channel-usage")
+    public List<DiscordVoiceChannelUsage> getLongestVoiceChannelUsage(@PathVariable() long userId) {
+        DiscordUser discordUser = discordUserService.getById(userId);
+        return discordVoiceChannelUsageService.getLongestVoiceChannelUsage(discordUser);
     }
 }

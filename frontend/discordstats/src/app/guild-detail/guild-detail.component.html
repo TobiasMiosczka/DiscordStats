@@ -41,6 +41,7 @@
       </mat-tab>
       <mat-tab label="Statistics" *ngIf="discordGuildStats">
           <h2>Statistics</h2>
+          <h3>Summary</h3>
           <table>
               <tr>
                   <td>Total Connections</td>
@@ -63,6 +64,8 @@
                   <td>{{discordGuildStats.max | SecondsToDurationStringPipe}} </td>
               </tr>
           </table>
+          <h3>Longest time spend in a voice channel</h3>
+          <app-voice-channel-usage-preview *ngFor="let u of longestDiscordVoiceChannelUsage" [data]="u"></app-voice-channel-usage-preview>
       </mat-tab>
     </mat-tab-group>
   </mat-card-content>

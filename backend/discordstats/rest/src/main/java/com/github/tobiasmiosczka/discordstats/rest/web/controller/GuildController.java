@@ -1,8 +1,6 @@
 package com.github.tobiasmiosczka.discordstats.rest.web.controller;
 
-import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordGuild;
-import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordStats;
-import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordUser;
+import com.github.tobiasmiosczka.discordstats.persistence.model.*;
 import com.github.tobiasmiosczka.discordstats.persistence.services.DiscordGuildService;
 import com.github.tobiasmiosczka.discordstats.persistence.services.DiscordUserService;
 import com.github.tobiasmiosczka.discordstats.persistence.services.DiscordVoiceChannelUsageService;
@@ -48,5 +46,11 @@ public class GuildController {
     public DiscordStats getStats(@PathVariable long guildId) {
         DiscordGuild discordGuild = discordGuildService.getById(guildId);
         return discordVoiceChannelUsageService.getStats(discordGuild);
+    }
+
+    @RequestMapping(value = "/{guildId}/longest-voice-channel-usage")
+    public List<DiscordVoiceChannelUsage> getLongestVoiceChannelUsage(@PathVariable() long guildId) {
+        DiscordGuild discordGuild = discordGuildService.getById(guildId);
+        return discordVoiceChannelUsageService.getLongestVoiceChannelUsage(discordGuild);
     }
 }

@@ -16,7 +16,7 @@ export class UserTimetableComponent extends TimetableComponent implements OnChan
 
   constructor(public dialog: MatDialog) {super(dialog);}
 
-  toArray(data: DiscordVoiceChannelUsage): any {
+  toArrayObject(data: DiscordVoiceChannelUsage): any {
     return [ data.discordVoiceChannel.name, new Date(data.dateFrom), new Date(data.dateTo) ];
   }
 

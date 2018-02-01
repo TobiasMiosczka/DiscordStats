@@ -17,45 +17,94 @@ public interface DiscordVoiceChannelUsageRepository extends JpaRepository<Discor
 
     @Query(
             "" +
-                    "SELECT                                                                                                                         " +
-                    "   NEW com.github.tobiasmiosczka.discordstats.persistence.model.DiscordStats(                                                  " +
-                    "       COUNT(u.id),                                                                                                            " +
-                    "       SUM(u.duration),                                                                                                        " +
-                    "       AVG(u.duration),                                                                                                        " +
-                    "       MAX(u.duration))                                                                                                        " +
-                    "FROM                                                                                                                           " +
-                    "   DiscordVoiceChannelUsage u,                                                                                                 " +
-                    "   DiscordVoiceChannel c                                                                                                       " +
-                    "WHERE                                                                                                                          " +
-                    "   u.discordVoiceChannel = c                                                                                                   " +
-                    "   AND c.discordGuild = ?1                                                                                                     ")
+                    "SELECT                                                                                          " +
+                    "   NEW com.github.tobiasmiosczka.discordstats.persistence.model.DiscordStats(                   " +
+                    "       COUNT(u.id),                                                                             " +
+                    "       SUM(u.duration),                                                                         " +
+                    "       AVG(u.duration),                                                                         " +
+                    "       MAX(u.duration))                                                                         " +
+                    "FROM                                                                                            " +
+                    "   DiscordVoiceChannelUsage u,                                                                  " +
+                    "   DiscordVoiceChannel c                                                                        " +
+                    "WHERE                                                                                           " +
+                    "   u.discordVoiceChannel = c                                                                    " +
+                    "   AND c.discordGuild = ?1                                                                      ")
     DiscordStats getStats(DiscordGuild discordGuild);
 
     @Query(
             "" +
-                    "SELECT                                                                                                                         " +
-                    "   NEW com.github.tobiasmiosczka.discordstats.persistence.model.DiscordStats(                                                  " +
-                    "       COUNT(u.id),                                                                                                            " +
-                    "       SUM(u.duration),                                                                                                        " +
-                    "       AVG(u.duration),                                                                                                        " +
-                    "       MAX(u.duration))                                                                                                        " +
-                    "FROM                                                                                                                           " +
-                    "   DiscordVoiceChannelUsage u                                                                                                 " +
-                    "WHERE                                                                                                                          " +
-                    "   u.discordVoiceChannel = ?1                                                                                                  ")
+                    "SELECT                                                                                          " +
+                    "   NEW com.github.tobiasmiosczka.discordstats.persistence.model.DiscordStats(                   " +
+                    "       COUNT(u.id),                                                                             " +
+                    "       SUM(u.duration),                                                                         " +
+                    "       AVG(u.duration),                                                                         " +
+                    "       MAX(u.duration))                                                                         " +
+                    "FROM                                                                                            " +
+                    "   DiscordVoiceChannelUsage u                                                                   " +
+                    "WHERE                                                                                           " +
+                    "   u.discordVoiceChannel = ?1                                                                   ")
     DiscordStats getStats(DiscordVoiceChannel discordVoiceChannel);
 
     @Query(
             "" +
-                    "SELECT                                                                                                                         " +
-                    "   NEW com.github.tobiasmiosczka.discordstats.persistence.model.DiscordStats(                                                  " +
-                    "       COUNT(u.id),                                                                                                            " +
-                    "       SUM(u.duration),                                                                                                        " +
-                    "       AVG(u.duration),                                                                                                        " +
-                    "       MAX(u.duration))                                                                                                        " +
-                    "FROM                                                                                                                           " +
-                    "   DiscordVoiceChannelUsage u                                                                                                 " +
-                    "WHERE                                                                                                                          " +
-                    "   u.discordUser = ?1                                                                                                  ")
+                    "SELECT                                                                                          " +
+                    "   NEW com.github.tobiasmiosczka.discordstats.persistence.model.DiscordStats(                   " +
+                    "       COUNT(u.id),                                                                             " +
+                    "       SUM(u.duration),                                                                         " +
+                    "       AVG(u.duration),                                                                         " +
+                    "       MAX(u.duration))                                                                         " +
+                    "FROM                                                                                            " +
+                    "   DiscordVoiceChannelUsage u                                                                   " +
+                    "WHERE                                                                                           " +
+                    "   u.discordUser = ?1                                                                           ")
     DiscordStats getStats(DiscordUser discordUser);
+
+    @Query(
+            "" +
+                    "SELECT                                                                                          " +
+                    "   u                                                                                            " +
+                    "FROM                                                                                            " +
+                    "   DiscordVoiceChannelUsage  u                                                                  " +
+                    "WHERE                                                                                           " +
+                    "   u.duration = (SELECT MAX(u.duration) FROM DiscordVoiceChannelUsage u WHERE u.discordUser = ?1)" +
+                    "   AND u.discordUser = ?1                                                                      ")
+    List<DiscordVoiceChannelUsage> getLongestVoiceChannelUsage(DiscordUser disordUser);
+
+    @Query(
+            "" +
+                    "SELECT                                                                                          " +
+                    "   u                                                                                            " +
+                    "FROM                                                                                            " +
+                    "   DiscordVoiceChannelUsage  u                                                                  " +
+                    "WHERE                                                                                           " +
+                    "   u.duration = (                                                                               " +
+                    "           SELECT                                                                               " +
+                    "               MAX(u.duration)                                                                  " +
+                    "           FROM                                                                                 " +
+                    "               DiscordVoiceChannelUsage u                                                       " +
+                    "           WHERE                                                                                " +
+                    "               u.discordVoiceChannel = ?1)                                                      " +
+                    "   AND u.discordVoiceChannel = ?1                                                               ")
+    List<DiscordVoiceChannelUsage> getLongestVoiceChannelUsage(DiscordVoiceChannel discordVoiceChannel);
+
+    @Query(
+            "" +
+                    "SELECT                                                                                          " +
+                    "   u                                                                                            " +
+                    "FROM                                                                                            " +
+                    "   DiscordVoiceChannelUsage u,                                                                  " +
+                    "   DiscordVoiceChannel c                                                                        " +
+                    "WHERE                                                                                           " +
+                    "   u.duration = (                                                                               " +
+                    "           SELECT                                                                               " +
+                    "               MAX(u.duration)                                                                  " +
+                    "           FROM                                                                                 " +
+                    "               DiscordVoiceChannelUsage u,                                                      " +
+                    "               DiscordVoiceChannel c                                                            " +
+                    "           WHERE                                                                                " +
+                    "               u.discordVoiceChannel = c                                                        " +
+                    "               AND c.discordGuild = ?1)                                                         " +
+                    "   AND u.discordVoiceChannel = c                                                                " +
+                    "   AND c.discordGuild = ?1                                                                      ")
+    List<DiscordVoiceChannelUsage> getLongestVoiceChannelUsage(DiscordGuild discordGuild);
 }

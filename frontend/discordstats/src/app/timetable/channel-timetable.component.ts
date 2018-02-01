@@ -20,7 +20,7 @@ export class ChannelTimetableComponent extends TimetableComponent implements OnC
 
   
 
-  toArray(data: DiscordVoiceChannelUsage): any {
+  toArrayObject(data: DiscordVoiceChannelUsage): any {
     return [ data.discordUser.name, new Date(data.dateFrom), new Date(data.dateTo) ];
   }
 

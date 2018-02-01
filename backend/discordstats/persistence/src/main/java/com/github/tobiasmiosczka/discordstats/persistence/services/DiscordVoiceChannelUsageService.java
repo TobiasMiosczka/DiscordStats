@@ -43,4 +43,16 @@ public class DiscordVoiceChannelUsageService {
     public DiscordStats getStats(DiscordUser discordUser) {
         return discordVoiceChannelUsageRepository.getStats(discordUser);
     }
+
+    public List<DiscordVoiceChannelUsage> getLongestVoiceChannelUsage(DiscordUser discordUser) {
+        return discordVoiceChannelUsageRepository.getLongestVoiceChannelUsage(discordUser);
+    }
+
+    public List<DiscordVoiceChannelUsage> getLongestVoiceChannelUsage(DiscordVoiceChannel discordVoiceChannel) {
+        return discordVoiceChannelUsageRepository.getLongestVoiceChannelUsage(discordVoiceChannel);
+    }
+
+    public List<DiscordVoiceChannelUsage> getLongestVoiceChannelUsage(DiscordGuild discordGuild) {
+        return discordVoiceChannelUsageRepository.getLongestVoiceChannelUsage(discordGuild);
+    }
 }

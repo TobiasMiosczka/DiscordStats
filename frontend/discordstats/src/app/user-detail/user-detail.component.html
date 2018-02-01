@@ -20,17 +20,18 @@
         <mat-form-field>
           <input matInput [matDatepicker]="picker" placeholder="From" [(ngModel)]="from" (dateChange)="update()">
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
+          <mat-datepicker touchUi="true" #picker></mat-datepicker>
         </mat-form-field>
         <mat-form-field>
           <input matInput [matDatepicker]="picker2" placeholder="To" [(ngModel)]="to" (dateChange)="update()">
           <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-          <mat-datepicker #picker2></mat-datepicker>
+          <mat-datepicker touchUi="true" #picker2></mat-datepicker>
         </mat-form-field>
         <user-timetable [data]="discordVoiceChannelUsages"></user-timetable>
       </mat-tab>
       <mat-tab label="Statistics" *ngIf="discordUserStats">
         <h2>Statistics</h2>
+        <h3>Summary</h3>
         <table>
             <tr>
                 <td>Total Connections</td>
@@ -53,6 +54,8 @@
                 <td class="right">{{discordUserStats.max | SecondsToDurationStringPipe}} </td>
             </tr>
         </table>
+        <h3>Longest time spend in a voice channel</h3>
+        <app-voice-channel-usage-preview *ngFor="let u of longestDiscordVoiceChannelUsage" [data]="u"></app-voice-channel-usage-preview>
     </mat-tab>
       <mat-tab label="Guilds">
         <h2>Guilds</h2>

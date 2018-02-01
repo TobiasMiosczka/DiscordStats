@@ -15,6 +15,7 @@ export class UserDetailComponent implements OnInit {
   discordUser: DiscordUser;
   discordUserStats: DiscordStats;
   discordVoiceChannelUsages: Array<DiscordVoiceChannelUsage> = new Array<DiscordVoiceChannelUsage>();
+  longestDiscordVoiceChannelUsage: Array<DiscordVoiceChannelUsage>;
 
   now: Date = new Date();
   from: Date = new Date(this.now.getFullYear(), this.now.getMonth(), this.now.getDate() - 1, this.now.getHours(), this.now.getMinutes(), this.now.getSeconds());
@@ -32,6 +33,10 @@ export class UserDetailComponent implements OnInit {
       data => {this.discordUserStats = data;},
       error => {console.log("Error");}
     )
+    this.discordStatsService.getUserLongestVoiceChannelUsage(userId).subscribe(
+      data => {this.longestDiscordVoiceChannelUsage = data;},
+      error => {console.log("error");}
+    );
     this.update();
   }
 

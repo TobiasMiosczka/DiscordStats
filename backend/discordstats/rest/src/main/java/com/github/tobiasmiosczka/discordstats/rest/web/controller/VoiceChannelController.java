@@ -54,4 +54,10 @@ public class VoiceChannelController {
         DiscordVoiceChannel discordVoiceChannel = discordVoiceChannelService.getById(channelId);
         return discordVoiceChannelUsageService.getStats(discordVoiceChannel);
     }
+
+    @RequestMapping(value = "/{channelId}/longest-voice-channel-usage")
+    public List<DiscordVoiceChannelUsage> getLongestVoiceChannelUsage(@PathVariable() long channelId) {
+        DiscordVoiceChannel discordVoiceChannel = discordVoiceChannelService.getById(channelId);
+        return discordVoiceChannelUsageService.getLongestVoiceChannelUsage(discordVoiceChannel);
+    }
 }

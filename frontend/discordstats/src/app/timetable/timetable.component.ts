@@ -8,9 +8,9 @@ import { OnInit, OnChanges } from "@angular/core/src/metadata/lifecycle_hooks";
 declare var google: any;
 
 export abstract class TimetableComponent implements OnChanges {
-    googleLoaded: boolean = false; 
-    container: any;
-    chart: any;
+    private googleLoaded: boolean = false; 
+    private container: any;
+    private chart: any;
 
     options: any = {
       tooltip: { trigger: 'none' }
@@ -23,31 +23,35 @@ export abstract class TimetableComponent implements OnChanges {
   
     constructor(public dialog: MatDialog) {}
 
-     abstract getDataTable(): any;
+    abstract getDataTable(): any;
   
     abstract getNumRows(): number;
 
-    abstract toArray(data: DiscordVoiceChannelUsage): any; 
+    abstract toArrayObject(data: DiscordVoiceChannelUsage): any; 
 
-    ngOnChanges(changes: SimpleChanges): void {
+    public ngOnChanges(changes: SimpleChanges): void {
       this.update();
     }
   
-    updateSelection() {
+    private updateSelection() {
       if(this.chart != null) {
         let index: number = this.chart.getSelection()[0].row;
+        console.log(this.chart.getSelection());
         let selected = this.data[index];
         this.discordVoiceChannelUsageDialogRef = this.dialog.open(DiscordVoiceChannelUsageDialogComponent, {
           hasBackdrop: true,
           data: selected
         });
+        if(this.chart.getSelection()[0] != null) {
+          
+        }
       }
     }
   
-    drawChart(){
+    private drawChart(){
       let dataTable = this.getDataTable();
       for(let i of this.data) {
-        dataTable.addRow(this.toArray(i));
+        dataTable.addRow(this.toArrayObject(i));
       }
       this.container = document.getElementById('chart');
       if(this.container != null) {
@@ -63,7 +67,7 @@ export abstract class TimetableComponent implements OnChanges {
       } 
     }
   
-    update() {
+    private update() {
       if(this.data.length > 0) {
         if(!this.googleLoaded) {
           google.charts.load('current',  {packages: ['timeline']});
