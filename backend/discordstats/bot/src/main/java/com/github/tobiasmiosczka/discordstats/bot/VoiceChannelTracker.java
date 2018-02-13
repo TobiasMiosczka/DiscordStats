@@ -1,5 +1,8 @@
 package com.github.tobiasmiosczka.discordstats.bot;
 
+import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordGuild;
+import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordVoiceChannel;
+import com.github.tobiasmiosczka.discordstats.persistence.services.DiscordGuildService;
 import com.github.tobiasmiosczka.discordstats.persistence.services.DiscordVoiceChannelService;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Guild;
@@ -9,21 +12,29 @@ import net.dv8tion.jda.core.events.channel.voice.VoiceChannelDeleteEvent;
 import net.dv8tion.jda.core.events.channel.voice.update.VoiceChannelUpdateNameEvent;
 import net.dv8tion.jda.core.events.channel.voice.update.VoiceChannelUpdateParentEvent;
 import net.dv8tion.jda.core.events.channel.voice.update.VoiceChannelUpdatePositionEvent;
+import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.github.tobiasmiosczka.discordstats.bot.DiscordHelper.convert;
+
 @Component
 public class VoiceChannelTracker extends ListenerAdapter {
 
-    private final DiscordVoiceChannelService channelService;
+    private final DiscordVoiceChannelService discordVoiceChannelService;
+    private final DiscordGuildService discordGuildService;
     private final JDA jda;
 
     @Autowired
-    VoiceChannelTracker(JDA jda, DiscordVoiceChannelService channelService) {
+    VoiceChannelTracker(JDA jda, DiscordVoiceChannelService discordVoiceChannelService, DiscordGuildService discordGuildService) {
         this.jda = jda;
         this.jda.addEventListener(this);
-        this.channelService = channelService;
+        this.discordVoiceChannelService = discordVoiceChannelService;
+        this.discordGuildService = discordGuildService;
         updateAll();
     }
 
@@ -34,37 +45,45 @@ public class VoiceChannelTracker extends ListenerAdapter {
     }
 
     public void updateAll(Guild guild) {
-        for (VoiceChannel voiceChannel : guild.getVoiceChannels()) {
-            addDiscordVoiceChannel(voiceChannel);
-        }
+        DiscordGuild discordGuild = discordGuildService.getById(guild.getIdLong());
+        List<DiscordVoiceChannel> discordVoiceChannels = guild.getVoiceChannels().stream().map(c -> convert(c, discordGuild, false)).collect(Collectors.toList());
+        discordVoiceChannelService.addDiscordVoiceChannels(discordVoiceChannels);
     }
 
     private void addDiscordVoiceChannel(VoiceChannel voiceChannel) {
-        channelService.addDiscordChannel(voiceChannel.getIdLong(), voiceChannel.getGuild().getIdLong(), voiceChannel.getName(), voiceChannel.getPosition());
+        DiscordGuild discordGuild = discordGuildService.getById(voiceChannel.getGuild().getIdLong());
+        discordVoiceChannelService.addDiscordVoiceChannel(convert(voiceChannel, discordGuild, false));
     }
 
     @Override
     public void onVoiceChannelCreate(VoiceChannelCreateEvent event) {
-        addDiscordVoiceChannel(event.getChannel());
+        this.addDiscordVoiceChannel(event.getChannel());
     }
 
     @Override
     public void onVoiceChannelUpdateName(VoiceChannelUpdateNameEvent event) {
-        channelService.updateName(event.getChannel().getIdLong(), event.getChannel().getName());
+        discordVoiceChannelService.updateName(event.getChannel().getIdLong(), event.getChannel().getName());
     }
 
     @Override
     public void onVoiceChannelDelete(VoiceChannelDeleteEvent event) {
-        channelService.delete(event.getChannel().getIdLong());
+        discordVoiceChannelService.delete(event.getChannel().getIdLong());
     }
 
     @Override
     public void onVoiceChannelUpdatePosition(VoiceChannelUpdatePositionEvent event) {
-        channelService.updatePosition(event.getChannel().getIdLong(), event.getChannel().getPosition());
+        event.getGuild().getVoiceChannels().stream().forEach(
+                voiceChannel -> discordVoiceChannelService.updatePosition(voiceChannel.getIdLong(), voiceChannel.getPosition()));
     }
 
     @Override
     public void onVoiceChannelUpdateParent(VoiceChannelUpdateParentEvent event) {
-        channelService.updatePosition(event.getChannel().getIdLong(), event.getChannel().getPosition());
+        event.getGuild().getVoiceChannels().stream().forEach(
+                voiceChannel -> discordVoiceChannelService.updatePosition(voiceChannel.getIdLong(), voiceChannel.getPosition()));
+    }
+
+    @Override
+    public void onGuildJoin(GuildJoinEvent event) {
+        updateAll(event.getGuild());
     }
 }

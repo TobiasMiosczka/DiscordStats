@@ -1,19 +1,33 @@
 package com.github.tobiasmiosczka.discordstats.persistence.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import java.util.Set;
 
 @Entity
 public class DiscordUser extends DiscordEntity {
 
+    @Column(length = 32, nullable = false, unique = false)
     private String name;
-    private String avatarUrl;
-    private boolean isBot;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<DiscordGuild> guilds;
+    @Column(length = 255, nullable = true, unique = false)
+    private String avatarUrl;
+
+    private boolean isBot;
+    private boolean allowTracking;
+    private boolean allowPublication;
+
+    public DiscordUser() {
+
+    }
+
+    public DiscordUser(long id, String name, String avatarUrl, boolean isBot, boolean allowTracking, boolean allowPublication) {
+        super.setId(id);
+        this.name = name;
+        this.avatarUrl = avatarUrl;
+        this.isBot = isBot;
+        this.allowTracking = allowTracking;
+        this.allowPublication = allowPublication;
+    }
 
     public String getName() {
         return name;
@@ -31,23 +45,27 @@ public class DiscordUser extends DiscordEntity {
         this.avatarUrl = avatarUrl;
     }
 
-    public Set<DiscordGuild> getGuilds() {
-        return guilds;
-    }
-
-    public void addGuild(DiscordGuild discordGuild) {
-        this.guilds.add(discordGuild);
-    }
-
-    public void removeGuild(DiscordGuild discordGuild) {
-        this.guilds.remove(discordGuild);
-    }
-
     public boolean isBot() {
         return isBot;
     }
 
     public void setBot(boolean bot) {
         isBot = bot;
+    }
+
+    public boolean isAllowTracking() {
+        return allowTracking;
+    }
+
+    public void setAllowTracking(boolean allowTracking) {
+        this.allowTracking = allowTracking;
+    }
+
+    public boolean isAllowPublication() {
+        return allowPublication;
+    }
+
+    public void setAllowPublication(boolean allowPublication) {
+        this.allowPublication = allowPublication;
     }
 }

@@ -1,5 +1,6 @@
 package com.github.tobiasmiosczka.discordstats.persistence.services;
 
+import com.github.tobiasmiosczka.discordstats.persistence.exception.DiscordGuildNotFoundException;
 import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordGuild;
 import com.github.tobiasmiosczka.discordstats.persistence.repositories.DiscordGuildRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,7 @@ public class DiscordGuildService {
     }
 
     public void addGuild(long id, String name, String iconUrl) {
-        DiscordGuild server = new DiscordGuild();
-        server.setId(id);
-        server.setName(name);
-        server.setIconUrl(iconUrl);
+        DiscordGuild server = new DiscordGuild(id, name, iconUrl);
         discordGuildRepository.save(server);
     }
 
@@ -35,13 +33,24 @@ public class DiscordGuildService {
         return discordGuildRepository.findAll();
     }
 
-    public DiscordGuild getById(long id) {
-        return discordGuildRepository.findOne(id);
+    public DiscordGuild getById(long id) throws DiscordGuildNotFoundException {
+        DiscordGuild discordGuild = discordGuildRepository.findOne(id);
+        if (discordGuild == null)
+            throw  new DiscordGuildNotFoundException();
+        return discordGuild;
     }
 
     public void changeGuildIcon(long guildId, String iconUrl) {
         DiscordGuild discordGuild = discordGuildRepository.getOne(guildId);
         discordGuild.setIconUrl(iconUrl);
         discordGuildRepository.save(discordGuild);
+    }
+
+    public void deleteGuild(long id) {
+        discordGuildRepository.delete(id);
+    }
+
+    public void addGuilds(List<DiscordGuild> discordGuilds) {
+        discordGuildRepository.save(discordGuilds);
     }
 }

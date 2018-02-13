@@ -1,13 +1,14 @@
 package com.github.tobiasmiosczka.discordstats.rest.web.controller;
 
+import com.github.tobiasmiosczka.discordstats.persistence.exception.DiscordUserNotFoundException;
 import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordStats;
 import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordUser;
-import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordVoiceChannel;
 import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordVoiceChannelUsage;
 import com.github.tobiasmiosczka.discordstats.persistence.services.DiscordUserService;
 import com.github.tobiasmiosczka.discordstats.persistence.services.DiscordVoiceChannelUsageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -34,7 +35,7 @@ public class UserController {
         return discordUserService.getById(userId);
     }
 
-    @RequestMapping(value = "/{userId}/voicechannelusage", method = RequestMethod.GET)
+    @RequestMapping(value = "/{userId}/voice-channel-usage", method = RequestMethod.GET)
     public List<DiscordVoiceChannelUsage> getUserVoiceChannelUsage(@PathVariable Long userId, @RequestParam @DateTimeFormat(pattern = PATTERN) Date from, @RequestParam @DateTimeFormat(pattern = PATTERN) Date to) {
         DiscordUser discordUser = discordUserService.getById(userId);
         return discordVoiceChannelUsageService.getByUser(discordUser, from, to);
@@ -50,5 +51,11 @@ public class UserController {
     public List<DiscordVoiceChannelUsage> getLongestVoiceChannelUsage(@PathVariable() long userId) {
         DiscordUser discordUser = discordUserService.getById(userId);
         return discordVoiceChannelUsageService.getLongestVoiceChannelUsage(discordUser);
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    private void discordUserNotFoundHandler(DiscordUserNotFoundException ex) {
+
     }
 }

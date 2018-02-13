@@ -1,10 +1,12 @@
 package com.github.tobiasmiosczka.discordstats.rest.web.controller;
 
+import com.github.tobiasmiosczka.discordstats.persistence.exception.DiscordGuildNotFoundException;
 import com.github.tobiasmiosczka.discordstats.persistence.model.*;
 import com.github.tobiasmiosczka.discordstats.persistence.services.DiscordGuildService;
 import com.github.tobiasmiosczka.discordstats.persistence.services.DiscordUserService;
 import com.github.tobiasmiosczka.discordstats.persistence.services.DiscordVoiceChannelUsageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,7 +41,7 @@ public class GuildController {
     @RequestMapping(value = "/{guildId}/user", method = RequestMethod.GET)
     public List<DiscordUser> getMembers(@PathVariable long guildId) {
         DiscordGuild discordGuild = discordGuildService.getById(guildId);
-        return discordUserService.getByGuild(discordGuild);
+        return discordUserService.getByDiscordGuild(discordGuild);
     }
 
     @RequestMapping(value = "/{guildId}/stats", method = RequestMethod.GET)
@@ -52,5 +54,11 @@ public class GuildController {
     public List<DiscordVoiceChannelUsage> getLongestVoiceChannelUsage(@PathVariable() long guildId) {
         DiscordGuild discordGuild = discordGuildService.getById(guildId);
         return discordVoiceChannelUsageService.getLongestVoiceChannelUsage(discordGuild);
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    private void discordGuildNotFoundHandler(DiscordGuildNotFoundException ex) {
+
     }
 }

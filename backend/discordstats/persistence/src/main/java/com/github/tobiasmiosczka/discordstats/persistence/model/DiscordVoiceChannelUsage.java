@@ -1,5 +1,9 @@
 package com.github.tobiasmiosczka.discordstats.persistence.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
@@ -8,10 +12,11 @@ import java.util.Date;
 @Entity
 public class DiscordVoiceChannelUsage extends BaseEntity{
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
     private DiscordUser discordUser;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private DiscordVoiceChannel discordVoiceChannel;
 
     private Date dateFrom;

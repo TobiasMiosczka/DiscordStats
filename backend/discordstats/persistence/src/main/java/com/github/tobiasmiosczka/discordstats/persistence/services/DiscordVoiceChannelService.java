@@ -1,5 +1,6 @@
 package com.github.tobiasmiosczka.discordstats.persistence.services;
 
+import com.github.tobiasmiosczka.discordstats.persistence.exception.DiscordVoiceChannelNotFoundException;
 import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordGuild;
 import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordVoiceChannel;
 import com.github.tobiasmiosczka.discordstats.persistence.repositories.DiscordGuildRepository;
@@ -22,17 +23,18 @@ public class DiscordVoiceChannelService {
     }
 
     public DiscordVoiceChannel getById(long id) {
-        return discordVoiceChannelRepository.findOne(id);
+        DiscordVoiceChannel discordVoiceChannel =  discordVoiceChannelRepository.findOne(id);
+        if (discordVoiceChannel == null)
+            throw new DiscordVoiceChannelNotFoundException();
+        return discordVoiceChannel;
     }
 
-    public DiscordVoiceChannel addDiscordChannel(long id, long guildId, String name, int positionRaw) {
-        DiscordVoiceChannel discordVoiceChannel = new DiscordVoiceChannel();
-        discordVoiceChannel.setId(id);
-        discordVoiceChannel.setName(name);
-        DiscordGuild guild = discordGuildRepository.findOne(guildId);
-        discordVoiceChannel.setDiscordGuild(guild);
-        discordVoiceChannel.setPosition(positionRaw);
+    public DiscordVoiceChannel addDiscordVoiceChannel(DiscordVoiceChannel discordVoiceChannel) {
         return discordVoiceChannelRepository.save(discordVoiceChannel);
+    }
+
+    public void addDiscordVoiceChannels(List<DiscordVoiceChannel> discordVoiceChannels) {
+        discordVoiceChannelRepository.save(discordVoiceChannels);
     }
 
     public void updateName(long id, String name) {
@@ -41,8 +43,14 @@ public class DiscordVoiceChannelService {
         discordVoiceChannelRepository.save(discordVoiceChannel);
     }
 
-    public void delete(long id) {
-        discordVoiceChannelRepository.delete(id);
+    public void delete(long id) throws DiscordVoiceChannelNotFoundException{
+        DiscordVoiceChannel discordVoiceChannel = discordVoiceChannelRepository.findOne(id);
+        if(discordVoiceChannel == null) {
+            throw new DiscordVoiceChannelNotFoundException();
+        } else {
+            discordVoiceChannel.setDeleted(true);
+            discordVoiceChannelRepository.save(discordVoiceChannel);
+        }
     }
 
     public List<DiscordVoiceChannel> getByDiscordGuild(DiscordGuild discordGuild) {

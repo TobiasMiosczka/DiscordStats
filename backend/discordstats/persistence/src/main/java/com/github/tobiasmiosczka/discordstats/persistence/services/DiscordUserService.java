@@ -1,8 +1,8 @@
 package com.github.tobiasmiosczka.discordstats.persistence.services;
 
+import com.github.tobiasmiosczka.discordstats.persistence.exception.DiscordUserNotFoundException;
 import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordGuild;
 import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordUser;
-import com.github.tobiasmiosczka.discordstats.persistence.repositories.DiscordGuildRepository;
 import com.github.tobiasmiosczka.discordstats.persistence.repositories.DiscordUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,56 +13,41 @@ import java.util.List;
 public class DiscordUserService {
 
     private final DiscordUserRepository discordUserRepository;
-    private final DiscordGuildRepository discordGuildRepository;
 
     @Autowired
-    public DiscordUserService(DiscordUserRepository discordUserRepository, DiscordGuildRepository discordGuildRepository) {
+    public DiscordUserService(
+            DiscordUserRepository discordUserRepository) {
         this.discordUserRepository = discordUserRepository;
-        this.discordGuildRepository = discordGuildRepository;
     }
 
-    public DiscordUser addUser(long id, String name, String avatarUrl, boolean isBot) {
-        DiscordUser discordUser = discordUserRepository.findOne(id);
-        if (discordUser == null)
-                discordUser = new DiscordUser();
-        discordUser.setId(id);
-        discordUser.setName(name);
-        discordUser.setAvatarUrl(avatarUrl);
-        discordUser.setBot(isBot);
+    public DiscordUser addUser(DiscordUser discordUser) {
         return discordUserRepository.save(discordUser);
     }
 
-    public DiscordUser getById(long id) {
-        return discordUserRepository.findOne(id);
+    public List<DiscordUser> addDiscordUsers(List<DiscordUser> discordUsers) {
+        return discordUserRepository.save(discordUsers);
     }
 
-    public void updateName(long id, String name) {
+    public DiscordUser getById(long id) throws DiscordUserNotFoundException {
+        DiscordUser discordUser = discordUserRepository.findOne(id);
+        if (discordUser == null)
+            throw  new DiscordUserNotFoundException();
+        return discordUser;
+    }
+
+    public DiscordUser updateName(long id, String name) {
         DiscordUser discordUser = discordUserRepository.findOne(id);
         discordUser.setName(name);
-        discordUserRepository.save(discordUser);
+        return discordUserRepository.save(discordUser);
     }
 
-    public void updateAvatar(long id, String avatarUrl) {
+    public DiscordUser updateAvatar(long id, String avatarUrl) {
         DiscordUser discordUser = discordUserRepository.findOne(id);
         discordUser.setAvatarUrl(avatarUrl);
-        discordUserRepository.save(discordUser);
+        return discordUserRepository.save(discordUser);
     }
 
-    public void addUserToGuild(long userId, long guildId) {
-        DiscordUser discordUser = discordUserRepository.findOne(userId);
-        DiscordGuild discordGuild = discordGuildRepository.findOne(guildId);
-        discordUser.addGuild(discordGuild);
-        discordUserRepository.save(discordUser);
-    }
-
-    public void removeUserFromGuild(long userId, long guildId) {
-        DiscordUser discordUser = discordUserRepository.findOne(userId);
-        DiscordGuild discordGuild = discordGuildRepository.findOne(guildId);
-        discordUser.removeGuild(discordGuild);
-        discordUserRepository.save(discordUser);
-    }
-
-    public List<DiscordUser> getByGuild(DiscordGuild discordGuild) {
+    public List<DiscordUser> getByDiscordGuild(DiscordGuild discordGuild) {
         return discordUserRepository.findByGuild(discordGuild);
     }
 }

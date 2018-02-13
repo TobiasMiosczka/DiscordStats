@@ -31,7 +31,11 @@ public class VoiceChannelUsageTracker extends ListenerAdapter {
     private final Map<Long, Date> onlineMap = new HashMap<>();
 
     @Autowired
-    VoiceChannelUsageTracker(JDA jda, DiscordVoiceChannelUsageService discordVoiceChannelUsageService, DiscordVoiceChannelService discordVoiceChannelService, DiscordUserService discordUserService) {
+    VoiceChannelUsageTracker(
+            JDA jda,
+            DiscordVoiceChannelUsageService discordVoiceChannelUsageService,
+            DiscordVoiceChannelService discordVoiceChannelService,
+            DiscordUserService discordUserService) {
         this.jda = jda;
         this.jda.addEventListener(this);
         this.discordVoiceChannelUsageService = discordVoiceChannelUsageService;
@@ -42,41 +46,50 @@ public class VoiceChannelUsageTracker extends ListenerAdapter {
 
     @Override
     public void onGuildVoiceJoin(GuildVoiceJoinEvent event) {
-        handleDiscordVoiceChannelJoin(event.getMember().getUser().getIdLong());
-
+        handleDiscordVoiceChannelJoin(event.getMember().getUser().getIdLong(), new Date());
     }
 
     @Override
     public void onGuildVoiceMove(GuildVoiceMoveEvent event) {
-        handleDiscordVoiceChannelLeave(event.getMember().getUser().getIdLong(), event.getChannelLeft().getIdLong());
-        handleDiscordVoiceChannelJoin(event.getMember().getUser().getIdLong());
+        Date date = new Date();
+        handleDiscordVoiceChannelLeave(
+                event.getMember().getUser().getIdLong(),
+                event.getChannelLeft().getIdLong(),
+                date);
+        handleDiscordVoiceChannelJoin(event.getMember().getUser().getIdLong(), date);
     }
 
     @Override
     public void onGuildVoiceLeave(GuildVoiceLeaveEvent event) {
-        handleDiscordVoiceChannelLeave(event.getMember().getUser().getIdLong(), event.getChannelLeft().getIdLong());
+        handleDiscordVoiceChannelLeave(
+                event.getMember().getUser().getIdLong(),
+                event.getChannelLeft().getIdLong(),
+                new Date());
     }
 
     private void updateAll() {
         onlineMap.clear();
+        Date date = new Date();
         for (Guild g : jda.getGuilds()) {
             for (VoiceChannel v : g.getVoiceChannels()) {
                 for (Member m : v.getMembers()) {
-                    handleDiscordVoiceChannelJoin(m.getUser().getIdLong());
+                    handleDiscordVoiceChannelJoin(m.getUser().getIdLong(), date);
                 }
             }
         }
     }
 
-    private void handleDiscordVoiceChannelJoin(long userId) {
-        onlineMap.put(userId, new Date());
+    private void handleDiscordVoiceChannelJoin(long userId, Date date) {
+        onlineMap.put(userId, date);
     }
 
-    private void handleDiscordVoiceChannelLeave(long userId, long voiceChannelId) {
+    private void handleDiscordVoiceChannelLeave(long userId, long voiceChannelId, Date date) {
         DiscordUser discordUser = discordUserService.getById(userId);
+        if (!discordUser.isAllowTracking())
+            discordUser = null;
         DiscordVoiceChannel discordVoiceChannel = discordVoiceChannelService.getById(voiceChannelId);
         Date dateFrom = onlineMap.get(userId);
-        Date dateTo = new Date();
+        Date dateTo = date;
         discordVoiceChannelUsageService.addDiscordVoiceChannelUsage(discordVoiceChannel, discordUser, dateFrom, dateTo);
         onlineMap.remove(userId);
     }

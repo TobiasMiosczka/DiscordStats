@@ -1,8 +1,8 @@
 package com.github.tobiasmiosczka.discordstats.bot;
 
+import com.github.tobiasmiosczka.discordstats.persistence.model.DiscordGuild;
 import com.github.tobiasmiosczka.discordstats.persistence.services.DiscordGuildService;
 import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.events.ReconnectedEvent;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
@@ -11,6 +11,9 @@ import net.dv8tion.jda.core.events.guild.update.GuildUpdateNameEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class GuildTracker extends ListenerAdapter {
@@ -27,9 +30,8 @@ public class GuildTracker extends ListenerAdapter {
     }
 
     private void updateAll() {
-        for (Guild guild : jda.getGuilds()) {
-            discordGuildService.addGuild(guild.getIdLong(), guild.getName(), guild.getIconUrl());
-        }
+        List<DiscordGuild> discordGuilds = jda.getGuilds().stream().map(g -> new DiscordGuild(g.getIdLong(), g.getName(), g.getIconUrl())).collect(Collectors.toList());
+        discordGuildService.addGuilds(discordGuilds);
     }
 
     @Override
@@ -39,12 +41,15 @@ public class GuildTracker extends ListenerAdapter {
 
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
-        discordGuildService.addGuild(event.getGuild().getIdLong(), event.getGuild().getName(), event.getGuild().getIconUrl());
+        discordGuildService.addGuild(
+                event.getGuild().getIdLong(),
+                event.getGuild().getName(),
+                event.getGuild().getIconUrl());
     }
 
     @Override
     public void onGuildLeave(GuildLeaveEvent event) {
-
+        discordGuildService.deleteGuild(event.getGuild().getIdLong());
     }
 
     @Override
